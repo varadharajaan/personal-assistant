@@ -1,0 +1,42 @@
+# Local runtime and private data
+logs/
+data/
+.env
+.env.local
+
+# Secrets and credentials
+*.token
+*.secret
+*.key
+*.pem
+*.pfx
+credentials.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.pytest_cache/
+.test-tmp/
+
+# Node
+node_modules/
+*.log
+
+# OS / editor
+Thumbs.db
+.DS_Store
+desktop.ini
+*.swp
+*~
+
+# Local-only handoff docs (kept out of public repo)
+CHECKPOINT.md
+LOCAL-SETUP.md
+
+# Local install artifacts
+node24-admin-upgrade.log
+*.bak
