@@ -1,0 +1,1200 @@
+[meta]
+name = "personal-assistant"
+description = "Central configuration for local assistant runners, paths, models, logs, and recipes."
+
+[paths]
+desktop_root = "{project_root}/../.."
+system_temp_dir = "{temp}"
+openclaw_project_dir = "{project_root}/openclaw"
+openclaw_workspace_dir = "{project_root}/openclaw/workspace"
+user_openclaw_dir = "{home}/.openclaw"
+openclaw_temp_logs_dir = "{system_temp_dir}/openclaw"
+openclaw_node_entrypoint = "{appdata}/npm/node_modules/openclaw/openclaw.mjs"
+openclaw_dist_entrypoint = "{appdata}/npm/node_modules/openclaw/dist/index.js"
+ultracode_launcher_dir = "{desktop_root}/ultracode-launcher"
+jar_dir = "{desktop_root}/jar"
+data_dir = "{project_root}/data"
+mobile_dir = "{project_root}/data/mobile"
+runs_dir = "{project_root}/data/runs"
+openclaw_runs_dir = "{project_root}/data/runs/openclaw"
+reports_dir = "{project_root}/data/reports"
+notes_dir = "{project_root}/data/notes"
+notes_index_file = "{project_root}/data/notes/index.jsonl"
+todos_dir = "{project_root}/data/todos"
+todos_file = "{project_root}/data/todos/todos.json"
+briefs_dir = "{project_root}/data/briefs"
+screenshots_dir = "{project_root}/data/screenshots"
+telegram_bridge_dir = "{project_root}/data/telegram-bridge"
+mobile_command_events_file = "{project_root}/data/mobile/commands.jsonl"
+logs_dir = "{project_root}/logs"
+unified_logs_dir = "{project_root}/logs/unified"
+py_logs_dir = "{project_root}/logs/py"
+ps1_logs_dir = "{project_root}/logs/ps1"
+checkpoint_file = "{project_root}/CHECKPOINT.md"
+
+runtime_dir_keys = [
+  "data_dir",
+  "mobile_dir",
+  "runs_dir",
+  "openclaw_runs_dir",
+  "reports_dir",
+  "notes_dir",
+  "todos_dir",
+  "briefs_dir",
+  "screenshots_dir",
+  "telegram_bridge_dir",
+  "unified_logs_dir",
+  "py_logs_dir",
+  "ps1_logs_dir",
+  "openclaw_project_dir",
+  "openclaw_workspace_dir",
+]
+
+[scopes]
+default_read_include_paths = ["{project_root}"]
+default_read_exclude_paths = [
+  "{project_root}/.git",
+  "{project_root}/.venv",
+  "{project_root}/node_modules",
+  "{project_root}/shared/python/__pycache__",
+  "{project_root}/assistant/__pycache__",
+  "{project_root}/assistant/devctl/__pycache__",
+]
+default_sensitive_exclude_patterns = [
+  "*.token",
+  "*.secret",
+  "*.key",
+  "*.pem",
+  "*.pfx",
+  ".env",
+]
+
+[desktop_sync]
+enabled = true
+folder_key = "personal-assistant"
+relative_path = "projects/personal-assistant"
+recursive = true
+formats = [".example", ".md", ".py", ".ps1", ".toml", ".txt"]
+include_aliases = ["--personal-assistant", "--pa", "-pa"]
+exclude_aliases = ["--no-personal-assistant", "--no-pa", "-npa"]
+ignore_names = ["personal-assistant"]
+ignore_patterns = [
+  ".git",
+  ".venv",
+  "node_modules",
+  "__pycache__",
+  "*.pyc",
+  "logs",
+  "data",
+  "node24-admin-upgrade.log",
+  ".env",
+  "*.token",
+  "*.secret",
+  "*.key",
+  "*.pem",
+  "*.pfx",
+]
+
+[models]
+primary = "github-copilot/gpt-5.4"
+agentic = "github-copilot/gpt-5.3-codex"
+max_complex = "github-copilot/claude-opus-4.7"
+max_intelligence = "github-copilot/claude-opus-4.7"
+openclaw_agent_default = "github-copilot/gpt-5.4"
+openclaw_agent_default_override_enabled = false
+copilot_coding_fallback = "github-copilot/gpt-5.3-codex"
+copilot_reasoning_fallback = "github-copilot/gpt-5.4"
+copilot_max_fallback = "github-copilot/claude-opus-4.7"
+fast_fallbacks = ["github-copilot/gpt-5.4-mini", "github-copilot/gemini-3-flash"]
+
+[models.validation]
+artifact_label = "models-validate"
+ansi_escape_regex = "\\x1b\\[[0-9;]*m"
+available_status = "available"
+provider_prefixed_status = "available-provider-prefixed"
+missing_status = "missing"
+empty_status = "empty"
+available_note = "Visible in the provider model list."
+provider_prefixed_note = "Visible after applying the selected provider prefix."
+missing_note = "Not visible in the selected provider model list."
+empty_note = "No model value is configured for this target."
+missing_is_failure = false
+missing_returncode = 3
+
+[[models.validation.targets]]
+key = "models.primary"
+purpose = "default route for normal work"
+required = true
+
+[[models.validation.targets]]
+key = "models.agentic"
+purpose = "agentic/coding workflow route"
+required = true
+
+[[models.validation.targets]]
+key = "models.max_complex"
+purpose = "maximum-complexity specialist route"
+required = true
+
+[[models.validation.targets]]
+key = "models.max_intelligence"
+purpose = "highest-intelligence practical route"
+required = true
+
+[[models.validation.targets]]
+key = "models.openclaw_agent_default"
+purpose = "observed OpenClaw default route"
+required = true
+
+[[models.validation.targets]]
+key = "models.copilot_coding_fallback"
+purpose = "coding fallback"
+required = true
+
+[[models.validation.targets]]
+key = "models.copilot_reasoning_fallback"
+purpose = "hard reasoning fallback"
+required = true
+
+[[models.validation.targets]]
+key = "models.copilot_max_fallback"
+purpose = "Copilot-listed maximum fallback"
+required = true
+
+[[models.validation.targets]]
+key = "models.fast_fallbacks"
+purpose = "fast/simple fallback options"
+required = false
+
+[flows]
+openclaw_runner = "openclaw-runner"
+openclaw_control = "openclaw-control"
+openclaw_ask = "openclaw-ask"
+openclaw_recipe = "openclaw-recipe"
+openclaw_agents = "openclaw-agents"
+openclaw_watchdog = "openclaw-watchdog"
+mobile_command = "mobile-command"
+mobile_bridge = "mobile-bridge"
+mobile_external = "mobile-external"
+mobile_secret = "mobile-secret"
+startup = "startup"
+archive = "memory-archive"
+log_inspector = "log-inspector"
+devctl = "devctl"
+devctl_smoke = "devctl-smoke"
+notes_tool = "notes-tool"
+todos_tool = "todos-tool"
+file_search = "file-search"
+daily_brief = "daily-brief"
+laptop_task = "laptop-task"
+telegram_bridge = "telegram-bridge"
+
+[devctl_logging]
+enabled = true
+command_path_fields = [
+  "command",
+  "action",
+  "agents_command",
+  "mobile_command",
+  "mobile_webhook_command",
+  "mobile_external_command",
+  "mobile_channel_command",
+  "mobile_token_command",
+  "mobile_owner_command",
+  "archive_command",
+  "watchdog_command",
+  "startup_command",
+  "logs_command",
+  "task_command",
+  "task_name",
+  "notes_command",
+  "todos_command",
+  "files_command",
+  "brief_command",
+  "bridge_command",
+  "alias_name",
+]
+unknown_command_label = "unknown"
+exception_message_max_chars = 300
+
+[console]
+output_encoding_errors = "replace"
+
+[protected_services.clipsync]
+enabled = true
+display_name = "ClipSync"
+purpose = "Local Wi-Fi clipboard/text sync between machine 1 and peer machines."
+project_path = "{ultracode_launcher_dir}/clipsync"
+network_scope = "local_wifi"
+safety_rule = "Do not stop, restart, reconfigure, unregister devices, change ports, or alter pairing/state unless the user explicitly asks for ClipSync work."
+allowed_actions = ["read_docs", "read_logs", "status_only"]
+blocked_actions = ["stop", "restart", "kill_process", "modify_pairing", "device_registration", "change_ports", "delete_state", "edit_runtime_config"]
+
+[openclaw]
+display_name = "openclaw"
+cwd = "{project_root}"
+executable_candidates = ["openclaw.cmd", "openclaw.exe", "openclaw"]
+windows_direct_node_entrypoint = true
+node_executable_candidates = ["node.exe", "node"]
+default_provider = "github-copilot"
+secret_flags = [
+  "--access-token",
+  "--app-token",
+  "--auth",
+  "--bot-token",
+  "--github-copilot-token",
+  "--password",
+  "--password-file",
+  "--secret",
+  "--secret-file",
+  "--target",
+  "--token",
+  "--token-file",
+  "-t",
+]
+secret_value_markers = ["commands.ownerAllowFrom", "commands.ownerDisplaySecret"]
+output_encoding = "utf-8"
+output_encoding_errors = "replace"
+windows_process_group = true
+windows_tree_kill_command = ["taskkill", "/F", "/T", "/PID", "{pid}"]
+forward_env_vars = []
+windows_user_env_registry_key = "Environment"
+windows_machine_env_registry_key = "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"
+timeout_returncode = 124
+not_found_returncode = 127
+post_kill_wait_seconds = 3
+default_agent_timeout_seconds = 600
+default_control_timeout_seconds = 120
+default_smoke_timeout_seconds = 60
+default_models_list_timeout_seconds = 180
+default_doctor_report_timeout_seconds = 240
+doctor_report_label = "doctor-report"
+models_list_timeout_actions = ["models-list", "models-validate"]
+doctor_report_timeout_actions = ["doctor", "doctor-report", "doctor-triage"]
+
+control_actions = [
+  "start",
+  "stop",
+  "restart",
+  "status",
+  "doctor",
+  "doctor-report",
+  "health",
+  "system-status",
+  "models-status",
+  "models-auth",
+  "models-list",
+  "models-validate",
+  "doctor-triage",
+  "doctor-review",
+  "doctor-fix-safe",
+]
+service_targets = ["gateway", "node", "both"]
+default_service_target = "gateway"
+
+[openclaw_watchdog]
+enabled = true
+host = "127.0.0.1"
+port = 18789
+probe_command = ["channels", "status", "--timeout", "30000", "--json"]
+probe_strategy = "http_and_cli"
+probe_timeout_seconds = 45
+http_probe_path = "/__openclaw__/canvas/"
+http_probe_timeout_seconds = 6
+http_probe_success_status_min = 200
+http_probe_success_status_max = 499
+probe_when_port_closed = false
+restart_when_probe_fails = true
+restart_when_port_closed = true
+restart_when_gateway_process_missing = true
+restart_when_duplicate_gateway_processes = true
+restart_when_orphan_node_process_exists = true
+cleanup_stale_gateway_locks = true
+stale_lock_globs = ["{openclaw_temp_logs_dir}/gateway*.lock"]
+stale_lock_action = "rename"
+stale_lock_suffix_template = ".stale-{timestamp}"
+stale_lock_timestamp_format = "%Y%m%d_%H%M%S"
+max_gateway_processes = 1
+kill_roles_on_restart = ["gateway", "node"]
+start_roles_on_restart = ["gateway", "node"]
+direct_start_after_native_failure = true
+direct_start_roles_after_native_failure = ["gateway"]
+post_kill_wait_seconds = 3
+startup_warmup_seconds = 15
+post_start_probe_attempts = 4
+post_start_probe_delay_seconds = 8
+run_returncode_healthy = 0
+run_returncode_unhealthy = 1
+run_returncode_disabled = 0
+status_returncode_healthy = 0
+status_returncode_unhealthy = 1
+powershell_executable_candidates = ["powershell.exe", "powershell"]
+powershell_arguments = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
+windows_process_query_script = "Get-CimInstance Win32_Process | Select-Object ProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Compress"
+windows_process_query_timeout_seconds = 20
+process_output_encoding = "utf-8"
+process_output_encoding_errors = "replace"
+windows_create_no_window = true
+kill_command = ["taskkill.exe", "/F", "/T", "/PID", "{pid}"]
+kill_timeout_seconds = 20
+protected_process_markers = [
+  "clipsync",
+  "ultracode-launcher/clipsync",
+  "ultracode-launcher\\clipsync",
+]
+healthy_message = "OpenClaw gateway is healthy."
+unhealthy_message = "OpenClaw gateway is unhealthy."
+restart_started_message = "OpenClaw watchdog restart started."
+restart_skipped_message = "OpenClaw watchdog restart skipped because the gateway is healthy."
+disabled_message = "OpenClaw watchdog is disabled in config."
+
+[[openclaw_watchdog.process_roles]]
+name = "gateway"
+required_markers = ["openclaw/dist/index.js", " gateway ", "--port 18789"]
+start_command = ["gateway", "start"]
+start_timeout_seconds = 120
+direct_start_enabled = true
+direct_start_command = ["{node_executable}", "{openclaw_dist_entrypoint}", "gateway", "--port", "18789"]
+direct_start_wait_seconds = 3
+
+[[openclaw_watchdog.process_roles]]
+name = "node"
+required_markers = ["openclaw/dist/index.js", " node run ", "--port 18789"]
+start_command = ["node", "start"]
+start_timeout_seconds = 120
+direct_start_enabled = false
+direct_start_command = []
+direct_start_wait_seconds = 0
+
+[openclaw_watchdog_schedule]
+enabled = true
+platform = "win32"
+task_name = "PersonalAssistantOpenClawWatchdog"
+schedule = "MINUTE"
+modifier = 10
+start_time = ""
+run_level = "LIMITED"
+force_create = true
+apply_settings_after_install = true
+start_when_available = true
+allow_start_on_batteries = true
+do_not_stop_on_batteries = true
+multiple_instances = "IgnoreNew"
+execution_time_limit = "PT15M"
+wrapper_script = "{project_root}/scripts/openclaw-watchdog.vbs"
+powershell_wrapper = "{project_root}/scripts/openclaw-watchdog.ps1"
+task_runner_executable_candidates = ["wscript.exe", "wscript"]
+task_runner_fallback = "wscript.exe"
+task_runner_arguments = ["//B", "//Nologo"]
+powershell_executable_candidates = ["powershell.exe", "powershell"]
+powershell_fallback = "powershell.exe"
+powershell_arguments = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
+hidden_powershell_command_template = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File {script}"
+schtasks_executable_candidates = ["schtasks.exe", "schtasks"]
+query_verbose = true
+query_format = "LIST"
+install_requires_confirm = true
+delete_requires_confirm = true
+run_now_requires_confirm = true
+unsupported_platform_message = "OpenClaw watchdog scheduling is currently implemented for Windows Task Scheduler only."
+disabled_message = "OpenClaw watchdog schedule is disabled in config."
+install_requires_confirm_message = "OpenClaw watchdog schedule install requires --confirm."
+delete_requires_confirm_message = "OpenClaw watchdog schedule delete requires --confirm."
+run_now_requires_confirm_message = "OpenClaw watchdog schedule run-now requires --confirm."
+
+[doctor]
+artifact_glob = "*_doctor-report_*.json"
+triage_label = "doctor-triage"
+json_indent = 2
+matched_line_max_chars = 220
+refresh_when_no_artifact = true
+no_issues_message = "No configured doctor issues matched the latest report."
+source_latest_artifact_label = "latest-artifact"
+source_refreshed_artifact_label = "refreshed-artifact"
+safe_fix_requires_confirm = true
+safe_fix_command = ["doctor", "--fix", "--non-interactive"]
+safe_fix_artifact_label = "doctor-fix-safe"
+safe_fix_refusal_message = "Safe doctor fix is available but confirmation is required. Re-run with --confirm after reviewing doctor-triage output."
+
+[[doctor.issue_patterns]]
+id = "command-owner-missing"
+severity = "action-needed"
+pattern = "No command owner is configured"
+safe_to_fix_automatically = false
+recommendation = "Choose the approved external channel user id first, then set commands.ownerAllowFrom and restart the OpenClaw gateway. Do not guess this value."
+
+[[doctor.issue_patterns]]
+id = "orphan-transcript"
+severity = "review-before-fix"
+pattern = "Found \\d+ orphan transcript file"
+safe_to_fix_automatically = false
+recommendation = "Review the transcript filename in the doctor report. Run OpenClaw doctor --fix only after confirming archive-by-rename is acceptable."
+
+[[doctor.issue_patterns]]
+id = "optional-skills-missing"
+severity = "non-blocking"
+pattern = "Missing requirements:\\s*[1-9]\\d*|Some skills are allowed for this agent but are not usable"
+safe_to_fix_automatically = false
+recommendation = "These are optional skill dependencies. Disable unused skills with OpenClaw doctor --fix only after reviewing which skills should remain available."
+
+[[doctor.issue_patterns]]
+id = "windows-symlink-eperm"
+severity = "non-blocking"
+pattern = "EPERM: operation not permitted, symlink"
+safe_to_fix_automatically = false
+recommendation = "Windows blocked plugin skill symlink creation. Use an elevated shell or Developer Mode only if the affected browser-automation skill is needed."
+
+[agent]
+default_agent = "main"
+use_configured_model_by_default = false
+thinking_levels = ["off", "minimal", "low", "medium", "high", "xhigh", "adaptive", "max"]
+model_help = "OpenClaw model override, for example github-copilot/gpt-5.4 or github-copilot/gpt-5.3-codex"
+
+[agent.routing]
+default_role = "default"
+role_choices = ["default", "agentic", "max"]
+ensure_roles_on_start = true
+repair_model_on_ensure = true
+workspace_seed_files = ["AGENTS.md", "SOUL.md", "TOOLS.md", "IDENTITY.md", "USER.md", "HEARTBEAT.md"]
+smoke_message_template = "Reply with exactly: ROLE_OK_{role}"
+smoke_timeout_seconds = 240
+
+[[agent.routing.roles]]
+name = "default"
+description = "Normal personal assistant work through the default OpenClaw agent."
+agent = "main"
+model = "github-copilot/gpt-5.4-mini"
+workspace = "{openclaw_workspace_dir}"
+thinking = "off"
+ensure_agent = false
+use_model_override = false
+
+[[agent.routing.roles]]
+name = "agentic"
+description = "Coding and multi-step agentic workflows."
+agent = "pa-codex"
+model = "github-copilot/gpt-5.3-codex"
+workspace = "{openclaw_project_dir}/agents/pa-codex/workspace"
+thinking = "high"
+ensure_agent = true
+use_model_override = false
+
+[[agent.routing.roles]]
+name = "max"
+description = "Maximum-complexity analysis and hard reasoning."
+agent = "pa-max"
+model = "github-copilot/claude-opus-4.7"
+workspace = "{openclaw_project_dir}/agents/pa-max/workspace"
+thinking = "medium"
+ensure_agent = true
+use_model_override = false
+
+[artifacts]
+id_random_chars = 8
+timestamp_format = "%Y%m%d_%H%M%S"
+extension = ".json"
+json_indent = 2
+
+[mobile]
+command_id_prefix = "mob"
+default_source = "mobile"
+default_sender = "unknown"
+default_channel = ""
+events_json_ascii = true
+sender_hash_chars = 12
+preview_chars = 140
+error_max_chars = 500
+list_limit_default = 50
+drain_limit_default = 5
+statuses = ["all", "pending", "processing", "completed", "failed", "skipped"]
+mark_statuses = ["pending", "processing", "completed", "failed", "skipped"]
+pending_status = "pending"
+processing_status = "processing"
+completed_status = "completed"
+failed_status = "failed"
+skipped_status = "skipped"
+
+[mobile_bridge]
+enabled = true
+host = "127.0.0.1"
+port = 8765
+path = "/mobile/command"
+health_path = "/health"
+source = "webhook"
+channel = "local-webhook"
+default_sender = "webhook"
+request_timeout_seconds = 30
+once_poll_seconds = 1
+max_body_bytes = 65536
+json_indent = 2
+require_token = false
+token_env_var = "PERSONAL_ASSISTANT_MOBILE_BRIDGE_TOKEN"
+auth_header = "X-PA-Bridge-Token"
+bearer_prefix = "Bearer "
+message_fields = ["message", "text", "command"]
+sender_fields = ["sender", "from", "user"]
+source_fields = ["source"]
+channel_fields = ["channel"]
+response_ok_status = "captured"
+bind_warning = "Default binding is loopback only. Change host and require_token deliberately before LAN exposure."
+
+[mobile_external]
+enabled = true
+mode = "native-channel"
+exposure = "loopback"
+allowed_exposures = ["loopback", "lan", "tunnel"]
+non_loopback_requires_token = true
+tunnel_provider = "manual"
+tunnel_command_candidates = ["cloudflared.exe", "cloudflared", "ngrok.exe", "ngrok", "tailscale.exe", "tailscale"]
+public_url = ""
+security_note = "External mobile access is disabled until a channel or tunnel is explicitly selected and token protection is enabled."
+external_enabled_message = "External mobile exposure is enabled."
+exposure_message_template = "Configured exposure is {exposure}."
+non_loopback_token_required_message = "Non-loopback mobile exposure requires mobile_bridge.require_token = true."
+token_missing_message_template = "Token validation is enabled but {token_env_var} is empty."
+token_ready_message = "Token requirement is compatible with the configured exposure."
+bind_host_message_template = "Mobile bridge host is {host}."
+tunnel_available_message = "Tunnel command is available."
+tunnel_missing_message = "No configured tunnel command is installed."
+
+[mobile_channel]
+enabled = true
+provider = "openclaw"
+channel = "telegram"
+account = ""
+secret_storage = "openclaw-token-file"
+token_file = "{user_openclaw_dir}/credentials/telegram-bot-token.txt"
+token_file_protect_acl = true
+token_file_acl_grants = ["{username}:(F)", "SYSTEM:(F)", "Administrators:(F)"]
+token_file_min_bytes = 20
+token_file_max_bytes = 4096
+s3_backup_enabled = true
+s3_backup_bucket = "<your-archive-bucket>"
+s3_backup_key = "personal-assistant/secrets/telegram-bot-token.txt"
+s3_backup_region = "ap-south-1"
+s3_backup_profile = "account01"
+s3_backup_sse = "AES256"
+s3_backup_requires_confirm = true
+s3_restore_requires_confirm = true
+aws_cli_candidates = ["aws.exe", "aws"]
+status_timeout_ms = 30000
+login_requires_confirm = true
+qr_public_url = ""
+supported_channels = ["telegram", "whatsapp", "discord", "slack", "signal", "msteams"]
+
+[mobile_owner]
+owner_allow_from = []
+owner_get_command = ["config", "get", "commands", "--json"]
+owner_set_command = ["config", "set", "commands.ownerAllowFrom", "{owner_allow_from_json}", "--strict-json"]
+owner_display_set_command = ["config", "set", "commands.ownerDisplay", "{owner_display}"]
+gateway_restart_command = ["gateway", "restart"]
+owner_display = "raw"
+set_owner_display = true
+set_requires_confirm = true
+restart_gateway_after_set = true
+command_timeout_seconds = 60
+restart_timeout_seconds = 90
+owner_id_min_chars = 3
+owner_hash_chars = 12
+owner_json_ascii = true
+show_raw_owner_ids = false
+redacted_owner_prefix = "owner#"
+blocked_owner_values = ["*"]
+status_message_max_chars = 500
+status_configured_message = "OpenClaw command owner allowlist is configured."
+status_missing_message = "OpenClaw command owner allowlist is missing. Set it only after the approved external channel user id is known."
+set_refusal_message = "Setting OpenClaw command owners requires --confirm and at least one --owner value or [mobile_owner].owner_allow_from."
+
+[logs]
+sources = ["personal", "openclaw", "ultracode", "all"]
+default_source = "personal"
+default_error_source = "all"
+safe_suffixes = [".log", ".jsonl", ".txt"]
+sensitive_name_regex = "(auth|token|secret|credential|password)"
+error_line_regex = "(\\[(ERROR|WARN)\\]|\\\"logLevelName\\\"\\s*:\\s*\\\"(ERROR|WARN|FATAL)\\\"|\\blevel[=:]\\s*[\\\"']?(error|warn|fatal)\\b|\\b(FATAL|EXCEPTION|TRACEBACK|FAILED|FAILURE|EPERM)\\b)"
+read_tail_max_bytes = 250000
+tail_lines_default = 80
+errors_limit_default = 80
+max_files_default = 12
+summary_error_limit = 100
+summary_latest_file_count = 10
+summary_latest_error_count = 20
+latest_checkpoint_lines_default = 90
+latest_log_lines_default = 40
+latest_log_max_files = 6
+openclaw_roots = ["{user_openclaw_dir}/logs", "{user_openclaw_dir}/agents", "{openclaw_temp_logs_dir}"]
+redaction_enabled = true
+redaction_replacement = "<redacted>"
+redaction_secret_file_keys = [
+  "mobile_channel.token_file",
+  "laptop_tasks.telegram.bot_api_token_file",
+]
+redaction_patterns = [
+  "https://api\\.telegram\\.org/bot[^\\s\\\"']+",
+  "\\bbot[0-9]{6,}:[A-Za-z0-9_-]{20,}\\b",
+  "\\b[0-9]{6,}:[A-Za-z0-9_-]{20,}\\b",
+  "agent:[^\\s\\\"']+:telegram:direct:[0-9]{5,}",
+  "\\\"chatId\\\"\\s*:\\s*\\\"?[0-9]{5,}\\\"?",
+  "\\\"target\\\"\\s*:\\s*\\\"?[0-9]{5,}\\\"?",
+]
+
+[logs.source_roots]
+personal = ["{logs_dir}"]
+openclaw = ["{user_openclaw_dir}/logs", "{user_openclaw_dir}/agents", "{openclaw_temp_logs_dir}"]
+ultracode = ["{ultracode_launcher_dir}/logs"]
+
+[laptop_tasks]
+enabled = true
+default_timeout_seconds = 120
+external_send_requires_confirm = true
+command_requires_confirm_message = "This laptop task requires --confirm because it can affect desktop state."
+external_send_requires_confirm_message = "Sending task output to Telegram requires --confirm."
+json_indent = 2
+max_output_chars = 4000
+command_fallback_message_template = "Command finished with returncode {returncode}."
+latest_log_line_default_max_bytes = 1048576
+latest_log_line_default_max_lines = 300
+dry_run_status = "dry-run"
+success_status = "ok"
+failed_status = "failed"
+refused_status = "refused"
+windows_create_no_window = true
+output_encoding = "utf-8"
+output_encoding_errors = "replace"
+not_found_returncode = 127
+timestamp_format = "%Y%m%d_%H%M%S"
+redacted_argument_markers = ["--target", "-t", "--token", "--bot-token"]
+command_arg_log_max_chars = 220
+no_matching_logs_message = "No matching log lines found."
+telegram_target_missing_message = "No Telegram target could be resolved from OpenClaw command-owner config or laptop_tasks.telegram explicit_target."
+
+[laptop_tasks.telegram]
+enabled = true
+channel = "telegram"
+account = ""
+target_source = "openclaw-command-owner"
+explicit_target = ""
+delivery_order = ["telegram-bot-api"]
+owner_config_command = ["config", "get", "commands", "--json"]
+owner_command_timeout_seconds = 60
+target_prefixes_to_strip = ["telegram:", "tg:"]
+send_timeout_seconds = 120
+native_retry_attempts = 2
+native_retry_delay_seconds = 3
+native_restart_gateway_before_retry = true
+native_restart_gateway_command = ["gateway", "restart"]
+native_restart_gateway_timeout_seconds = 90
+native_retry_markers = [
+  "gateway timeout after",
+  "gateway request timeout",
+  "gateway event loop readiness timeout",
+]
+message_max_chars = 3500
+media_message_template = "Primary screen screenshot from {timestamp}."
+text_message_prefix = "Personal assistant task result:"
+force_document = false
+silent = false
+bot_api_enabled = true
+bot_api_base_url = "https://api.telegram.org"
+bot_api_token_file = "{user_openclaw_dir}/credentials/telegram-bot-token.txt"
+bot_api_timeout_seconds = 30
+bot_api_send_message_method = "sendMessage"
+bot_api_send_media_method = "sendDocument"
+bot_api_media_field = "document"
+bot_api_caption_field = "caption"
+bot_api_parse_json_response = true
+
+[laptop_tasks.screenshot]
+output_dir = "{screenshots_dir}"
+filename_template = "primary-screen-{timestamp}.png"
+image_format = "Png"
+powershell_executable_candidates = ["powershell.exe", "powershell"]
+powershell_arguments = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
+capture_timeout_seconds = 30
+max_media_bytes = 20000000
+
+[[laptop_tasks.tasks]]
+name = "ultracode-start-hotkeys"
+kind = "command"
+description = "Start/restart UltraCode Launcher hotkeys using the same hidden VBS backend as the Ctrl+Shift+W shortcut."
+safety_level = "system-action"
+requires_confirm = true
+confirm_reason = "Runs start-all-ahk.vbs; this restarts AutoHotkey and may background UltraCode helper services exactly like the desktop shortcut."
+cwd = "{ultracode_launcher_dir}"
+command = ["wscript.exe", "//B", "//Nologo", "{ultracode_launcher_dir}/start-all-ahk.vbs"]
+timeout_seconds = 90
+success_message_source = "latest-log-line"
+success_log_path = "{ultracode_launcher_dir}/logs/unified/start-all.log"
+success_log_contains = "DONE All AHK scripts launched"
+success_log_regex = ""
+success_log_strip_regexes = ["^(?:\\[[^\\]]+\\]\\s*)+"]
+success_log_require_mtime_after_start = true
+success_log_read_delay_seconds = 0.2
+success_log_max_bytes = 1048576
+success_log_max_lines = 200
+success_message_template = "{line}"
+
+[[laptop_tasks.tasks]]
+name = "ultracode-latest-errors"
+kind = "log-summary"
+description = "Show recent warning/error/failure lines from UltraCode Launcher logs."
+safety_level = "read-only"
+requires_confirm = false
+source = "ultracode"
+lines = 80
+errors_only = true
+max_files = 12
+
+[[laptop_tasks.tasks]]
+name = "screen-primary-screenshot"
+kind = "screenshot"
+description = "Capture the primary screen to a local PNG; optionally send it to the approved Telegram owner through OpenClaw native message send."
+safety_level = "screen-capture"
+requires_confirm = false
+requires_confirm_when_sending = true
+
+[logging]
+roll_size_mb = 10
+retention_days = 90
+ps1_console_enabled = false
+debug_env_var = "PERSONAL_ASSISTANT_DEBUG_LOGS"
+debug_enabled_values = ["1", "true", "yes", "on"]
+redacted_key_terms = ["token", "secret", "password", "credential"]
+
+[tools.notes]
+id_prefix = "note"
+timestamp_format = "%Y%m%d_%H%M%S"
+id_random_chars = 6
+slug_max_chars = 60
+list_limit_default = 20
+search_limit_default = 20
+body_preview_chars = 160
+default_tags = ["local"]
+
+[tools.todos]
+id_prefix = "todo"
+timestamp_format = "%Y%m%d_%H%M%S"
+id_random_chars = 6
+all_status = "all"
+default_status = "pending"
+completed_status = "completed"
+cancelled_status = "cancelled"
+statuses = ["pending", "completed", "cancelled"]
+list_statuses = ["all", "pending", "completed", "cancelled"]
+priorities = ["low", "normal", "high"]
+default_priority = "normal"
+list_limit_default = 50
+preview_chars = 160
+
+[tools.file_search]
+default_scope = "personal"
+scopes = ["personal", "ultracode", "jar"]
+approved_roots = { personal = "{project_root}", ultracode = "{ultracode_launcher_dir}", jar = "{jar_dir}" }
+default_limit = 50
+context_chars = 120
+max_file_bytes = 1000000
+safe_suffixes = [".md", ".py", ".ps1", ".toml", ".txt", ".json", ".jsonl"]
+exclude_dirs = [".git", ".venv", "node_modules", "__pycache__", "logs", "data"]
+sensitive_name_patterns = ["*.token", "*.secret", "*.key", "*.pem", "*.pfx", ".env"]
+
+[tools.daily_brief]
+timestamp_format = "%Y%m%d_%H%M%S"
+title_prefix = "Daily Brief"
+file_name_suffix = "daily-brief.md"
+latest_notes_limit = 5
+pending_todos_limit = 10
+log_lines = 20
+mobile_limit = 10
+
+[startup]
+actions = [
+  "ensure-runtime-dirs",
+  "openclaw-watchdog-run",
+  "ensure-agent-roles",
+  "openclaw-gateway-status",
+  "mobile-webhook-info",
+  "archive-plan",
+]
+continue_on_error = true
+openclaw_start_timeout_seconds = 120
+openclaw_status_timeout_seconds = 60
+run_model_validation = false
+start_mobile_bridge = false
+mobile_bridge_background = false
+
+[archive]
+enabled = true
+provider = "local"
+local_archive_dir = "{project_root}/data/archive"
+staging_root_dir = "{system_temp_dir}/personal-assistant/archive-staging"
+staging_prefix = "pa-archive-"
+timestamp_format = "%Y%m%d_%H%M%S"
+archive_name_template = "personal-assistant-memory-{timestamp}.7z"
+compression_backend = "7z"
+compression_format = "7z"
+compression_profile = "ppmd-text-ultra-no-times"
+seven_zip_executable_candidates = [
+  "7z.exe",
+  "7za.exe",
+  "7zr.exe",
+  "C:/Program Files/7-Zip/7z.exe",
+  "C:/Program Files (x86)/7-Zip/7z.exe",
+]
+seven_zip_arguments = [
+  "a",
+  "-t7z",
+  "-m0=PPMd",
+  "-mx=9",
+  "-mmem=128m",
+  "-mo=32",
+  "-ms=on",
+  "-mtm=off",
+  "-mtc=off",
+  "-mta=off",
+  "-sccUTF-8",
+  "-bb0",
+  "-bd",
+  "-y",
+]
+json_indent = 2
+max_file_bytes = 2000000
+include_paths = [
+  "{project_root}/README.md",
+  "{project_root}/PLAN.md",
+  "{project_root}/LOCAL-SETUP.md",
+  "{checkpoint_file}",
+  "{project_root}/docs",
+  "{project_root}/config",
+  "{openclaw_workspace_dir}",
+  "{notes_dir}",
+  "{todos_dir}",
+  "{briefs_dir}",
+]
+safe_suffixes = [".example", ".json", ".jsonl", ".md", ".toml", ".txt"]
+exclude_names = [".git", ".venv", "__pycache__", "node_modules", "logs", "runs", "mobile"]
+exclude_patterns = ["*.pyc", "*.token", "*.secret", "*.key", "*.pem", "*.pfx", ".env"]
+s3_enabled = true
+s3_bucket = "<your-archive-bucket>"
+s3_prefix = "personal-assistant/archive"
+s3_region = "ap-south-1"
+s3_delete_protection_policy_enabled = true
+s3_object_lock_enabled = true
+s3_object_lock_mode = "GOVERNANCE"
+s3_object_lock_days = 60
+s3_lifecycle_enabled = true
+s3_lifecycle_rule_id = "expire-archive-after-60-days"
+s3_lifecycle_filter_prefix = "personal-assistant/archive/"
+s3_lifecycle_expiration_days = 60
+s3_lifecycle_noncurrent_expiration_days = 60
+s3_lifecycle_abort_rule_id = "abort-incomplete-multipart-uploads"
+s3_lifecycle_abort_multipart_days = 7
+s3_lifecycle_mutation_deny_sid = "DenyPersonalAssistantLifecycleMutation"
+s3_lifecycle_apply_requires_confirm = true
+s3_policy_propagation_wait_seconds = 10
+s3_requires_confirm = true
+aws_profile = "account01"
+aws_cli_candidates = ["aws.exe", "aws"]
+
+[archive_schedule]
+enabled = true
+platform = "win32"
+task_name = "PersonalAssistantArchiveToS3"
+schedule = "DAILY"
+start_time = "22:30"
+run_level = "LIMITED"
+force_create = true
+apply_settings_after_install = true
+start_when_available = true
+allow_start_on_batteries = true
+do_not_stop_on_batteries = true
+wrapper_script = "{project_root}/scripts/archive-to-s3.vbs"
+task_runner_executable_candidates = ["wscript.exe", "wscript"]
+task_runner_fallback = "wscript.exe"
+task_runner_arguments = ["//B", "//Nologo"]
+powershell_executable_candidates = ["powershell.exe", "powershell"]
+powershell_fallback = "powershell.exe"
+powershell_arguments = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File"]
+hidden_powershell_command_template = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File {script}"
+schtasks_executable_candidates = ["schtasks.exe", "schtasks"]
+query_verbose = true
+query_format = "LIST"
+install_requires_confirm = true
+delete_requires_confirm = true
+run_now_requires_confirm = true
+unsupported_platform_message = "Archive scheduling is currently implemented for Windows Task Scheduler only."
+disabled_message = "Archive schedule is disabled in config."
+install_requires_confirm_message = "Archive schedule install requires --confirm."
+delete_requires_confirm_message = "Archive schedule delete requires --confirm."
+run_now_requires_confirm_message = "Archive schedule run-now requires --confirm."
+
+[telegram_bridge]
+enabled = true
+bot_api_base_url = "https://api.telegram.org"
+token_file = "{user_openclaw_dir}/credentials/telegram-bot-token.txt"
+get_updates_method = "getUpdates"
+send_message_method = "sendMessage"
+poll_long_timeout_seconds = 50
+http_request_timeout_seconds = 65
+allowed_updates = ["message"]
+offset_state_dir = "{project_root}/data/telegram-bridge"
+offset_state_file = "{project_root}/data/telegram-bridge/offset.json"
+loop_sleep_seconds_on_error = 5
+loop_max_consecutive_errors = 12
+reply_max_chars = 3500
+reply_parse_mode = ""
+unauthorized_reply_enabled = false
+unauthorized_log_warn = true
+unknown_command_reply = "Unknown command. Send 'help' to see available commands."
+help_reply_template = "Personal assistant commands:\n{commands}"
+help_command_line_template = "- {pattern}: {description}"
+ack_before_dispatch = false
+ack_message_template = "Working on it..."
+owner_source = "openclaw-command-owner"
+explicit_owner_ids = []
+owner_prefixes_to_strip = ["telegram:", "tg:"]
+owner_lookup_timeout_seconds = 30
+owner_cache_seconds = 60
+dispatch_default_role = "default"
+dispatch_openclaw_ask_timeout_seconds = 180
+task_confirm_keywords = ["confirm", "--confirm"]
+task_send_telegram_via_dispatch = false
+openclaw_unavailable_reply = "OpenClaw is currently unavailable. Try again shortly."
+task_unknown_reply_template = "Unknown task '{name}'. Send 'help' to list approved tasks."
+task_refused_reply_template = "Task '{name}' requires confirm. Re-send as: task {name} confirm"
+sender_hash_chars = 12
+sender_hash_prefix = "user#"
+log_message_text_in_general_logs = false
+inbound_text_max_chars_for_log = 4000
+outbound_text_max_chars_for_log = 4000
+audit_inbound_to_jsonl = true
+audit_jsonl_path = "{project_root}/data/telegram-bridge/inbound.jsonl"
+audit_outbound_to_jsonl = true
+audit_outbound_jsonl_path = "{project_root}/data/telegram-bridge/outbound.jsonl"
+runtime_dir = "{project_root}/data/telegram-bridge"
+status_returncode_healthy = 0
+status_returncode_unhealthy = 1
+
+[[telegram_bridge.rules]]
+id = "ping"
+match = "exact"
+patterns = ["ping"]
+description = "Reply with pong (no OpenClaw needed)."
+kind = "canned"
+reply = "pong"
+
+[[telegram_bridge.rules]]
+id = "help"
+match = "exact"
+patterns = ["help", "?", "/help"]
+description = "List available commands."
+kind = "help"
+
+[[telegram_bridge.rules]]
+id = "shortcut-screenshot"
+match = "exact"
+patterns = ["screenshot", "screen", "take screenshot", "screen shot", "ss"]
+description = "Capture primary screen and send to Telegram."
+kind = "task"
+task_name = "screen-primary-screenshot"
+task_confirm = true
+task_send_telegram = true
+
+[[telegram_bridge.rules]]
+id = "shortcut-ultracode-start"
+match = "exact"
+patterns = ["start ultracode", "restart ultracode", "ultracode", "start ahk", "restart ahk", "ahk", "uc", "start uc", "restart uc"]
+description = "Run the UltraCode launcher (start-all-ahk)."
+kind = "task"
+task_name = "ultracode-start-hotkeys"
+task_confirm = true
+task_send_telegram = true
+
+[[telegram_bridge.rules]]
+id = "shortcut-ultracode-errors"
+match = "exact"
+patterns = ["ultracode errors", "ultracode latest errors", "ultracode logs", "uc errors", "uc logs"]
+description = "Latest UltraCode warning/error log lines."
+kind = "task"
+task_name = "ultracode-latest-errors"
+task_confirm = true
+task_send_telegram = true
+
+[[telegram_bridge.rules]]
+id = "task-by-name"
+match = "prefix"
+patterns = ["task ", "/task "]
+description = "Run an approved laptop task. Append 'confirm' if the task requires it."
+kind = "task-by-name"
+
+[[telegram_bridge.rules]]
+id = "ask"
+match = "prefix"
+patterns = ["ask ", "/ask "]
+description = "Ask OpenClaw a question."
+kind = "openclaw-ask"
+role = "default"
+
+[[telegram_bridge.rules]]
+id = "fallback-ask"
+match = "fallback"
+patterns = []
+description = "Anything else is treated as a question for OpenClaw."
+kind = "openclaw-ask"
+role = "default"
+
+[telegram_bridge_schedule]
+enabled = true
+platform = "win32"
+task_name = "PersonalAssistantTelegramBridge"
+schedule = "ONLOGON"
+modifier = 0
+start_time = ""
+run_level = "LIMITED"
+force_create = true
+apply_settings_after_install = true
+start_when_available = true
+allow_start_on_batteries = true
+do_not_stop_on_batteries = true
+multiple_instances = "IgnoreNew"
+execution_time_limit = "PT0S"
+wrapper_script = "{project_root}/scripts/telegram-bridge.vbs"
+powershell_wrapper = "{project_root}/scripts/telegram-bridge.ps1"
+task_runner_executable_candidates = ["wscript.exe", "wscript"]
+task_runner_fallback = "wscript.exe"
+task_runner_arguments = ["//B", "//Nologo"]
+powershell_executable_candidates = ["powershell.exe", "powershell"]
+powershell_fallback = "powershell.exe"
+powershell_arguments = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command"]
+hidden_powershell_command_template = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File {script}"
+schtasks_executable_candidates = ["schtasks.exe", "schtasks"]
+query_verbose = true
+query_format = "LIST"
+install_requires_confirm = true
+delete_requires_confirm = true
+run_now_requires_confirm = true
+unsupported_platform_message = "Telegram bridge scheduling is currently implemented for Windows Task Scheduler only."
+disabled_message = "Telegram bridge schedule is disabled in config."
+install_requires_confirm_message = "Telegram bridge schedule install requires --confirm."
+delete_requires_confirm_message = "Telegram bridge schedule delete requires --confirm."
+run_now_requires_confirm_message = "Telegram bridge schedule run-now requires --confirm."
+
+[aliases]
+openclaw-control = ["openclaw"]
+summarize-ultracode = ["run", "summarize-ultracode"]
+latest-openclaw-errors = ["logs", "errors", "--source", "openclaw"]
+mobile-bridge = ["mobile", "webhook", "serve"]
+model-routes = ["openclaw", "models-validate"]
+openclaw-doctor-triage = ["openclaw", "doctor-triage"]
+start = ["startup", "run"]
+archive-to-s3 = ["archive", "create", "--upload-s3", "--confirm"]
+openclaw-watchdog = ["watchdog", "run"]
+telegram-bridge = ["bridge", "run"]
+
+[recipes.execution]
+preface = """
+Plan mode is part of execution mode for this project.
+Before acting, state a concise plan, then execute read-only analysis unless the user explicitly approved writes.
+Preserve secrets, avoid dumping tokens, and summarize with concrete file paths and next actions.
+"""
+
+[recipes.summarize-ultracode]
+description = "Read-only summary of the Desktop ultracode-launcher project."
+prompt = """
+{execution_preface}
+
+Task:
+Summarize this project:
+{ultracode_launcher_dir}
+
+Focus on:
+- what the launcher does
+- important start/control scripts
+- logging helpers and log layout
+- OneDrive, Python, and PowerShell helper patterns worth reusing
+- latest obvious risks or maintenance items
+- what should be copied into personal-assistant patterns
+"""
+
+[recipes.latest-openclaw-errors]
+description = "Ask OpenClaw to inspect its latest local logs/session files and explain errors."
+prompt = """
+{execution_preface}
+
+Task:
+Inspect OpenClaw local logs and session-related state under:
+{user_openclaw_dir}
+
+Also consider project setup notes under:
+{openclaw_project_dir}
+
+Return:
+- latest ERROR/WARN/failure lines by file
+- probable cause
+- whether this blocks local onboarding
+- exact next command to try
+
+Do not expose tokens, auth state contents, or credentials.
+"""
+
+[recipes.latest-pa-errors]
+description = "Ask OpenClaw to inspect personal-assistant logs and explain recent errors."
+prompt = """
+{execution_preface}
+
+Task:
+Inspect personal-assistant logs under:
+{logs_dir}
+
+Return latest warnings/errors, likely causes, and next fixes.
+Do not expose secrets or private message bodies.
+"""
+
+[recipes.handoff]
+description = "Summarize current repo state and remaining work for a fresh chat."
+prompt = """
+{execution_preface}
+
+Task:
+Create a concise handoff summary for this repo:
+{project_root}
+
+Use CHECKPOINT.md, PLAN.md, LOCAL-SETUP.md, and openclaw/config-notes.md.
+Include done, remaining work, risks, and immediate next commands.
+"""
+
+[recipes.daily-brief]
+description = "Create a local project brief from checkpoint, logs, and pending mobile commands."
+prompt = """
+{execution_preface}
+
+Task:
+Create a daily brief for the personal assistant setup.
+
+Use:
+- {checkpoint_file}
+- {project_root}/PLAN.md
+- {logs_dir}
+- {mobile_dir}
+
+Return:
+- current setup status
+- pending commands
+- blockers
+- recommended next 3 actions
+"""
+
+[recipes.jar-context]
+description = "Summarize the jar context docs that are currently active in the IDE."
+prompt = """
+{execution_preface}
+
+Task:
+Summarize assistant-relevant context from:
+{jar_dir}
+
+Start with:
+- reverse-engineering-memory-context.md
+- CONTEXT.md
+
+Return only durable project context and recommendations for personal-assistant memory.
+"""
