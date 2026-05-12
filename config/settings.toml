@@ -188,6 +188,7 @@ file_search = "file-search"
 daily_brief = "daily-brief"
 laptop_task = "laptop-task"
 telegram_bridge = "telegram-bridge"
+web_ui = "web-ui"
 
 [devctl_logging]
 enabled = true
@@ -212,6 +213,7 @@ command_path_fields = [
   "files_command",
   "brief_command",
   "bridge_command",
+  "web_command",
   "alias_name",
 ]
 unknown_command_label = "unknown"
@@ -1078,6 +1080,66 @@ install_requires_confirm_message = "Telegram bridge schedule install requires --
 delete_requires_confirm_message = "Telegram bridge schedule delete requires --confirm."
 run_now_requires_confirm_message = "Telegram bridge schedule run-now requires --confirm."
 
+[web_ui]
+# Local-only operator console. Loopback ONLY. Never expose to LAN/Tailnet/public
+# without explicit re-review of auth, owner gates, and rate limiting.
+enabled = true
+host = "127.0.0.1"
+port = 7100
+allowed_hosts = ["127.0.0.1", "localhost"]
+templates_dir = "{project_root}/assistant/devctl/web_ui_templates"
+title = "Personal Assistant Console"
+chat_default_role = "default"
+chat_default_timeout_seconds = 300
+chat_max_message_chars = 4000
+chat_reply_max_chars = 8000
+recipe_buttons = [
+  { id = "screenshot",        label = "📸 Screenshot",            kind = "task", task_name = "screen-primary-screenshot",  task_confirm = true,  task_send_telegram = false },
+  { id = "app-errors",        label = "🩺 App: latest errors",    kind = "task", task_name = "app-latest-errors",          task_confirm = true,  task_send_telegram = false },
+  { id = "start-app",         label = "🚀 Start app hotkeys",     kind = "task", task_name = "start-app-hotkeys",          task_confirm = true,  task_send_telegram = false },
+  { id = "openclaw-errors",   label = "📜 OpenClaw recent errors", kind = "log-tail", source = "openclaw", lines = 80, errors_only = true },
+  { id = "session-tail",      label = "🪵 Session log tail",       kind = "log-tail", source = "personal-assistant", flow = "_session", lines = 120, errors_only = false },
+  { id = "bridge-tail",       label = "📨 Bridge log tail",        kind = "log-tail", source = "personal-assistant", flow = "telegram-bridge", lines = 120, errors_only = false },
+]
+log_panels = [
+  { id = "session", label = "Session log",  flow = "_session",         max_lines = 200 },
+  { id = "bridge",  label = "Bridge log",   flow = "telegram-bridge",  max_lines = 200 },
+  { id = "watchdog",label = "Watchdog log", flow = "openclaw-watchdog", max_lines = 200 },
+]
+status_checks = [
+  { id = "bridge-task",     label = "Telegram bridge (scheduled task)", kind = "schtasks",  task_name = "PersonalAssistantTelegramBridge" },
+  { id = "watchdog-task",   label = "OpenClaw watchdog (scheduled task)", kind = "schtasks", task_name = "PersonalAssistantOpenClawWatchdog" },
+  { id = "archive-task",    label = "Daily archive (scheduled task)",   kind = "schtasks",  task_name = "PersonalAssistantArchiveToS3" },
+  { id = "openclaw-version",label = "OpenClaw CLI version",             kind = "openclaw-cmd", args = ["--version"], timeout = 30 },
+]
+disabled_message = "Web UI is disabled in config ([web_ui].enabled = false)."
+unauthorized_message = "Unauthorized: web UI is loopback-only."
+not_found_message = "Not found."
+serve_banner = "Personal Assistant web console listening on http://{host}:{port} (loopback only)."
+
+[web_ui_schedule]
+enabled = true
+task_name = "PersonalAssistantWebUI"
+schedule = "ONLOGON"
+modifier = 0
+start_time = ""
+run_level = "LIMITED"
+start_when_available = true
+allow_start_on_batteries = true
+do_not_stop_on_batteries = true
+multiple_instances = "IgnoreNew"
+execution_time_limit = "PT0S"
+wrapper_script = "{project_root}/scripts/web-ui.vbs"
+powershell_wrapper = "{project_root}/scripts/web-ui.ps1"
+task_runner_executable = "C:/WINDOWS/system32/wscript.exe"
+powershell_executable = "C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe"
+schtasks_executable = "C:/WINDOWS/system32/schtasks.exe"
+hidden_powershell_command_template = "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File {script}"
+disabled_message = "Web UI schedule is disabled in config."
+install_requires_confirm_message = "Web UI schedule install requires --confirm."
+delete_requires_confirm_message = "Web UI schedule delete requires --confirm."
+run_now_requires_confirm_message = "Web UI schedule run-now requires --confirm."
+
 [aliases]
 openclaw-control = ["openclaw"]
 summarize-example-app = ["run", "summarize-example-app"]
@@ -1089,6 +1151,7 @@ start = ["startup", "run"]
 archive-to-s3 = ["archive", "create", "--upload-s3", "--confirm"]
 openclaw-watchdog = ["watchdog", "run"]
 telegram-bridge = ["bridge", "run"]
+web-ui = ["web", "serve"]
 
 [recipes.execution]
 preface = """
