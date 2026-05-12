@@ -32,6 +32,8 @@ Thumbs.db
 desktop.ini
 *.swp
 *~
+.vscode/
+.idea/
 
 # Local-only handoff docs (kept out of public repo)
 CHECKPOINT.md
