@@ -112,6 +112,7 @@ from assistant.devctl.telegram_bridge_schedule import (
     query_telegram_bridge_schedule,
     run_telegram_bridge_schedule_now,
 )
+from assistant.devctl.web_ui import info as web_ui_info, serve as web_ui_serve
 from assistant.devctl.paths import CHECKPOINT_FILE, ensure_runtime_dirs
 from assistant.devctl.recipes import get_recipe, list_recipes
 from assistant.devctl.startup import run_startup, startup_steps_as_dicts
@@ -841,6 +842,23 @@ def cmd_bridge(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_web(args: argparse.Namespace) -> int:
+    log = get_logger(get_str("flows.web_ui"))
+    if args.web_command == "info":
+        payload = web_ui_info()
+        if args.json:
+            print(json.dumps(payload, indent=get_int("artifacts.json_indent")))
+        else:
+            for key, value in payload.items():
+                print(f"{key}: {value}")
+        return 0
+    if args.web_command == "serve":
+        host = args.host or None
+        port = args.port or None
+        return web_ui_serve(log=log, host=host, port=port)
+    return 2
+
+
 def cmd_startup(args: argparse.Namespace) -> int:
     log = get_logger(get_str("flows.startup"))
     runner = OpenClawRunner(log)
@@ -1372,6 +1390,16 @@ def build_parser() -> argparse.ArgumentParser:
     bridge_schedule_run_now = bridge_sub.add_parser("schedule-run-now", help="Trigger the Telegram bridge scheduled task now")
     bridge_schedule_run_now.add_argument("--confirm", action="store_true")
     bridge_schedule_run_now.set_defaults(func=cmd_bridge)
+
+    web = subparsers.add_parser("web", help="Local web UI console (loopback only)")
+    web_sub = web.add_subparsers(dest="web_command", required=True)
+    web_info = web_sub.add_parser("info", help="Show configured web UI surface")
+    web_info.add_argument("--json", action="store_true")
+    web_info.set_defaults(func=cmd_web)
+    web_serve = web_sub.add_parser("serve", help="Start the local web UI server")
+    web_serve.add_argument("--host", default="", help="Override host (default from config)")
+    web_serve.add_argument("--port", type=int, default=0, help="Override port (default from config)")
+    web_serve.set_defaults(func=cmd_web)
 
     startup = subparsers.add_parser("startup", help="Run local personal-assistant startup orchestration")
     startup_sub = startup.add_subparsers(dest="startup_command", required=True)

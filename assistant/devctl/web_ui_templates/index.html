@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ TITLE }}</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --panel-border: #30363d;
+      --fg: #e6edf3;
+      --fg-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-warm: #f0883e;
+      --ok: #3fb950;
+      --warn: #d29922;
+      --fail: #f85149;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { background: var(--bg); color: var(--fg); margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header h1 { margin: 0; font-size: 18px; font-weight: 600; }
+    header .badge {
+      color: var(--fg-muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+    }
+    main {
+      display: grid;
+      gap: 16px;
+      padding: 16px 24px 32px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+    section.panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    section.panel > h2 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    section.panel > h2 .hint {
+      color: var(--fg-muted);
+      font-weight: 400;
+      font-size: 12px;
+    }
+    .col-left { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    .col-right { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+    /* Chat */
+    #chat-log {
+      background: #0b0f15;
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 12px;
+      min-height: 220px;
+      max-height: 420px;
+      overflow-y: auto;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      white-space: pre-wrap;
+    }
+    #chat-log .turn { padding: 6px 0; border-bottom: 1px dashed var(--panel-border); }
+    #chat-log .turn:last-child { border-bottom: 0; }
+    #chat-log .you { color: var(--accent); }
+    #chat-log .bot { color: var(--fg); }
+    #chat-log .meta { color: var(--fg-muted); font-size: 11px; }
+    #chat-log .err  { color: var(--fail); }
+    #chat-form { display: flex; gap: 8px; margin-top: 12px; }
+    #chat-input {
+      flex: 1;
+      background: #0b0f15;
+      color: var(--fg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    #chat-input:focus { outline: none; border-color: var(--accent); }
+    .btn {
+      background: var(--accent);
+      color: #0d1117;
+      border: 0;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--panel-border); }
+
+    /* Recipes */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 8px;
+    }
+    .recipe-grid button {
+      text-align: left;
+      padding: 10px 12px;
+      background: #0b0f15;
+      color: var(--fg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 120ms;
+    }
+    .recipe-grid button:hover { border-color: var(--accent); }
+    #recipe-output {
+      margin-top: 12px;
+      background: #0b0f15;
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+    }
+    #recipe-output.visible { display: block; }
+
+    /* Status */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--panel-border);
+    }
+    .status-row:last-child { border-bottom: 0; }
+    .status-row .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--fg-muted);
+      flex-shrink: 0;
+    }
+    .status-row.ok    .dot { background: var(--ok); }
+    .status-row.warn  .dot { background: var(--warn); }
+    .status-row.fail  .dot { background: var(--fail); }
+    .status-row .label { flex: 1; }
+    .status-row .detail { color: var(--fg-muted); font-family: var(--mono); font-size: 11.5px; }
+
+    /* Logs */
+    .log-panel { margin-bottom: 16px; }
+    .log-panel:last-child { margin-bottom: 0; }
+    .log-panel .log-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 12px; color: var(--fg-muted); margin-bottom: 4px;
+    }
+    .log-panel pre {
+      background: #0b0f15;
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      max-height: 220px;
+      overflow: auto;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    footer { padding: 12px 24px; color: var(--fg-muted); font-size: 12px; }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🦞 {{ TITLE }}</h1>
+    <span class="badge" id="health-badge">connecting…</span>
+    <button class="btn ghost" id="refresh-all" style="margin-left:auto">↻ Refresh</button>
+  </header>
+
+  <main>
+    <div class="col-left">
+      <section class="panel">
+        <h2>💬 Chat <span class="hint" id="chat-meta">main / thinking=off</span></h2>
+        <div id="chat-log"></div>
+        <form id="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" placeholder="ask the agent… (Enter to send)" />
+          <button class="btn" type="submit" id="chat-send">Send</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>📋 Recent logs <span class="hint">tail of unified flows</span></h2>
+        <div id="logs-root">Loading…</div>
+      </section>
+    </div>
+
+    <div class="col-right">
+      <section class="panel">
+        <h2>⚡ Recipes <span class="hint">one-click tasks</span></h2>
+        <div class="recipe-grid" id="recipes-root">Loading…</div>
+        <div id="recipe-output"></div>
+      </section>
+
+      <section class="panel">
+        <h2>📡 Status <span class="hint">scheduled tasks + CLI checks</span></h2>
+        <div id="status-root">Loading…</div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    Loopback only · all actions logged via the unified flow ·
+    <a href="https://github.com/varadharajaan/personal-assistant">repo</a>
+  </footer>
+
+<script>
+const $ = (sel) => document.querySelector(sel);
+
+async function api(path, opts = {}) {
+  const resp = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
+  if (!resp.ok && resp.status !== 400) throw new Error(`${resp.status} ${resp.statusText}`);
+  return resp.json();
+}
+
+// ---- chat -----------------------------------------------------------
+function appendTurn({ youText, botText, meta, isError }) {
+  const log = $("#chat-log");
+  const node = document.createElement("div");
+  node.className = "turn";
+  const youLine = document.createElement("div");
+  youLine.className = "you";
+  youLine.textContent = "You: " + youText;
+  const botLine = document.createElement("div");
+  botLine.className = isError ? "err" : "bot";
+  botLine.textContent = "Bot: " + (botText || "");
+  const metaLine = document.createElement("div");
+  metaLine.className = "meta";
+  metaLine.textContent = meta || "";
+  node.appendChild(youLine);
+  node.appendChild(botLine);
+  if (meta) node.appendChild(metaLine);
+  log.appendChild(node);
+  log.scrollTop = log.scrollHeight;
+}
+
+$("#chat-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = $("#chat-input");
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = "";
+  $("#chat-send").disabled = true;
+  appendTurn({ youText: msg, botText: "thinking…", meta: "" });
+  try {
+    const out = await api("/api/chat", { method: "POST", body: JSON.stringify({ message: msg }) });
+    // Replace the last "thinking…" turn.
+    const log = $("#chat-log");
+    log.removeChild(log.lastElementChild);
+    appendTurn({
+      youText: msg,
+      botText: out.reply,
+      meta: `${out.role} / ${out.agent} / ${out.model || "agent-pinned"} / thinking=${out.thinking || "default"} · ${out.elapsed_ms} ms`,
+      isError: !out.ok,
+    });
+  } catch (err) {
+    const log = $("#chat-log");
+    log.removeChild(log.lastElementChild);
+    appendTurn({ youText: msg, botText: String(err), meta: "", isError: true });
+  } finally {
+    $("#chat-send").disabled = false;
+    input.focus();
+  }
+});
+
+// ---- recipes --------------------------------------------------------
+async function loadRecipes() {
+  const root = $("#recipes-root");
+  root.innerHTML = "";
+  try {
+    const data = await api("/api/recipes");
+    for (const r of data.recipes) {
+      const btn = document.createElement("button");
+      btn.textContent = r.label || r.id;
+      btn.addEventListener("click", () => runRecipe(r.id, btn));
+      root.appendChild(btn);
+    }
+  } catch (e) {
+    root.textContent = "Failed to load recipes: " + e;
+  }
+}
+
+async function runRecipe(id, btn) {
+  const out = $("#recipe-output");
+  out.classList.add("visible");
+  out.textContent = `Running ${id}…`;
+  if (btn) btn.disabled = true;
+  try {
+    const result = await api("/api/recipe", { method: "POST", body: JSON.stringify({ id }) });
+    const head = `${result.ok ? "✅" : "❌"} ${result.title}  (rc=${result.returncode}, ${result.elapsed_ms} ms)`;
+    out.textContent = head + "\n\n" + (result.detail || "");
+  } catch (e) {
+    out.textContent = `recipe failed: ${e}`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ---- status ---------------------------------------------------------
+async function loadStatus() {
+  const root = $("#status-root");
+  root.innerHTML = "";
+  try {
+    const data = await api("/api/status");
+    for (const entry of data.entries) {
+      const row = document.createElement("div");
+      row.className = "status-row " + entry.state;
+      const dot = document.createElement("span"); dot.className = "dot";
+      const label = document.createElement("span"); label.className = "label"; label.textContent = entry.label;
+      const detail = document.createElement("span"); detail.className = "detail"; detail.textContent = entry.detail || "";
+      row.appendChild(dot); row.appendChild(label); row.appendChild(detail);
+      root.appendChild(row);
+    }
+  } catch (e) {
+    root.textContent = "Failed to load status: " + e;
+  }
+}
+
+// ---- logs -----------------------------------------------------------
+async function loadLogs() {
+  const root = $("#logs-root");
+  root.innerHTML = "";
+  try {
+    const data = await api("/api/logs");
+    for (const panel of data.panels) {
+      const wrap = document.createElement("div"); wrap.className = "log-panel";
+      const head = document.createElement("div"); head.className = "log-head";
+      const lbl = document.createElement("span"); lbl.textContent = panel.label;
+      const flow = document.createElement("span"); flow.textContent = panel.flow + ".log";
+      head.appendChild(lbl); head.appendChild(flow);
+      const pre = document.createElement("pre"); pre.textContent = panel.text;
+      wrap.appendChild(head); wrap.appendChild(pre);
+      root.appendChild(wrap);
+    }
+  } catch (e) {
+    root.textContent = "Failed to load logs: " + e;
+  }
+}
+
+// ---- health ---------------------------------------------------------
+async function loadHealth() {
+  try {
+    await api("/api/health");
+    $("#health-badge").textContent = "connected";
+    $("#health-badge").style.color = "var(--ok)";
+  } catch (e) {
+    $("#health-badge").textContent = "offline";
+    $("#health-badge").style.color = "var(--fail)";
+  }
+}
+
+async function refreshAll() {
+  await Promise.all([loadHealth(), loadRecipes(), loadStatus(), loadLogs()]);
+}
+$("#refresh-all").addEventListener("click", refreshAll);
+refreshAll();
+setInterval(() => { loadHealth(); loadLogs(); }, 8000);
+</script>
+</body>
+</html>
