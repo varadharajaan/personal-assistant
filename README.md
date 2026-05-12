@@ -204,7 +204,7 @@ This is not a weekend hack. The repo enforces a **principal-engineer standard**:
 | OpenClaw watchdog                    | ✅ Installed (5 min)  |
 | Daily S3 archive                     | ✅ Installed (22:30)  |
 | Local OpenClaw onboarding            | ✅ Complete           |
-| Phase 6 local web UI                 | 🟡 Not started        |
+| Phase 6 local web UI                 | 🟡 Planned ([#21](https://github.com/varadharajaan/personal-assistant/issues/21)) |
 
 ---
 
