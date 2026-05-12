@@ -11,7 +11,7 @@ user_openclaw_dir = "{home}/.openclaw"
 openclaw_temp_logs_dir = "{system_temp_dir}/openclaw"
 openclaw_node_entrypoint = "{appdata}/npm/node_modules/openclaw/openclaw.mjs"
 openclaw_dist_entrypoint = "{appdata}/npm/node_modules/openclaw/dist/index.js"
-ultracode_launcher_dir = "{desktop_root}/ultracode-launcher"
+example_app_dir = "{desktop_root}/example-app-launcher"
 jar_dir = "{desktop_root}/jar"
 data_dir = "{project_root}/data"
 mobile_dir = "{project_root}/data/mobile"
@@ -224,7 +224,7 @@ output_encoding_errors = "replace"
 enabled = true
 display_name = "ClipSync"
 purpose = "Local Wi-Fi clipboard/text sync between machine 1 and peer machines."
-project_path = "{ultracode_launcher_dir}/clipsync"
+project_path = "{example_app_dir}/clipsync"
 network_scope = "local_wifi"
 safety_rule = "Do not stop, restart, reconfigure, unregister devices, change ports, or alter pairing/state unless the user explicitly asks for ClipSync work."
 allowed_actions = ["read_docs", "read_logs", "status_only"]
@@ -339,8 +339,8 @@ kill_command = ["taskkill.exe", "/F", "/T", "/PID", "{pid}"]
 kill_timeout_seconds = 20
 protected_process_markers = [
   "clipsync",
-  "ultracode-launcher/clipsync",
-  "ultracode-launcher\\clipsync",
+  "example-app-launcher/clipsync",
+  "example-app-launcher\\clipsync",
 ]
 healthy_message = "OpenClaw gateway is healthy."
 unhealthy_message = "OpenClaw gateway is unhealthy."
@@ -606,7 +606,7 @@ status_missing_message = "OpenClaw command owner allowlist is missing. Set it on
 set_refusal_message = "Setting OpenClaw command owners requires --confirm and at least one --owner value or [mobile_owner].owner_allow_from."
 
 [logs]
-sources = ["personal", "openclaw", "ultracode", "all"]
+sources = ["personal", "openclaw", "example-app", "all"]
 default_source = "personal"
 default_error_source = "all"
 safe_suffixes = [".log", ".jsonl", ".txt"]
@@ -641,7 +641,7 @@ redaction_patterns = [
 [logs.source_roots]
 personal = ["{logs_dir}"]
 openclaw = ["{user_openclaw_dir}/logs", "{user_openclaw_dir}/agents", "{openclaw_temp_logs_dir}"]
-ultracode = ["{ultracode_launcher_dir}/logs"]
+example-app = ["{example_app_dir}/logs"]
 
 [laptop_tasks]
 enabled = true
@@ -714,18 +714,18 @@ capture_timeout_seconds = 30
 max_media_bytes = 20000000
 
 [[laptop_tasks.tasks]]
-name = "ultracode-start-hotkeys"
+name = "start-app-hotkeys"
 kind = "command"
-description = "Start/restart UltraCode Launcher hotkeys using the same hidden VBS backend as the Ctrl+Shift+W shortcut."
+description = "Start/restart ExampleApp Launcher hotkeys using the same hidden VBS backend as the Ctrl+Shift+W shortcut."
 safety_level = "system-action"
 requires_confirm = true
-confirm_reason = "Runs start-all-ahk.vbs; this restarts AutoHotkey and may background UltraCode helper services exactly like the desktop shortcut."
-cwd = "{ultracode_launcher_dir}"
-command = ["wscript.exe", "//B", "//Nologo", "{ultracode_launcher_dir}/start-all-ahk.vbs"]
+confirm_reason = "Runs start-app.vbs; this restarts a desktop automation tool and may background ExampleApp helper services exactly like the desktop shortcut."
+cwd = "{example_app_dir}"
+command = ["wscript.exe", "//B", "//Nologo", "{example_app_dir}/start-app.vbs"]
 timeout_seconds = 90
 success_message_source = "latest-log-line"
-success_log_path = "{ultracode_launcher_dir}/logs/unified/start-all.log"
-success_log_contains = "DONE All AHK scripts launched"
+success_log_path = "{example_app_dir}/logs/unified/start-all.log"
+success_log_contains = "DONE All desktop hotkey scripts launched"
 success_log_regex = ""
 success_log_strip_regexes = ["^(?:\\[[^\\]]+\\]\\s*)+"]
 success_log_require_mtime_after_start = true
@@ -735,12 +735,12 @@ success_log_max_lines = 200
 success_message_template = "{line}"
 
 [[laptop_tasks.tasks]]
-name = "ultracode-latest-errors"
+name = "app-latest-errors"
 kind = "log-summary"
-description = "Show recent warning/error/failure lines from UltraCode Launcher logs."
+description = "Show recent warning/error/failure lines from ExampleApp Launcher logs."
 safety_level = "read-only"
 requires_confirm = false
-source = "ultracode"
+source = "example-app"
 lines = 80
 errors_only = true
 max_files = 12
@@ -788,8 +788,8 @@ preview_chars = 160
 
 [tools.file_search]
 default_scope = "personal"
-scopes = ["personal", "ultracode", "jar"]
-approved_roots = { personal = "{project_root}", ultracode = "{ultracode_launcher_dir}", jar = "{jar_dir}" }
+scopes = ["personal", "example-app", "jar"]
+approved_roots = { personal = "{project_root}", example-app = "{example_app_dir}", jar = "{jar_dir}" }
 default_limit = 50
 context_chars = 120
 max_file_bytes = 1000000
@@ -1000,22 +1000,22 @@ task_confirm = true
 task_send_telegram = true
 
 [[telegram_bridge.rules]]
-id = "shortcut-ultracode-start"
+id = "shortcut-example-app-start"
 match = "exact"
-patterns = ["start ultracode", "restart ultracode", "ultracode", "start ahk", "restart ahk", "ahk", "uc", "start uc", "restart uc"]
-description = "Run the UltraCode launcher (start-all-ahk)."
+patterns = ["start example-app", "restart example-app", "example-app", "start hotkey scripts", "restart hotkey scripts", "hotkey scripts", "uc", "start uc", "restart uc"]
+description = "Run the ExampleApp launcher (start-app)."
 kind = "task"
-task_name = "ultracode-start-hotkeys"
+task_name = "start-app-hotkeys"
 task_confirm = true
 task_send_telegram = true
 
 [[telegram_bridge.rules]]
-id = "shortcut-ultracode-errors"
+id = "shortcut-example-app-errors"
 match = "exact"
-patterns = ["ultracode errors", "ultracode latest errors", "ultracode logs", "uc errors", "uc logs"]
-description = "Latest UltraCode warning/error log lines."
+patterns = ["example-app errors", "example-app latest errors", "example-app logs", "uc errors", "uc logs"]
+description = "Latest ExampleApp warning/error log lines."
 kind = "task"
-task_name = "ultracode-latest-errors"
+task_name = "app-latest-errors"
 task_confirm = true
 task_send_telegram = true
 
@@ -1080,7 +1080,7 @@ run_now_requires_confirm_message = "Telegram bridge schedule run-now requires --
 
 [aliases]
 openclaw-control = ["openclaw"]
-summarize-ultracode = ["run", "summarize-ultracode"]
+summarize-example-app = ["run", "summarize-example-app"]
 latest-openclaw-errors = ["logs", "errors", "--source", "openclaw"]
 mobile-bridge = ["mobile", "webhook", "serve"]
 model-routes = ["openclaw", "models-validate"]
@@ -1097,14 +1097,14 @@ Before acting, state a concise plan, then execute read-only analysis unless the 
 Preserve secrets, avoid dumping tokens, and summarize with concrete file paths and next actions.
 """
 
-[recipes.summarize-ultracode]
-description = "Read-only summary of the Desktop ultracode-launcher project."
+[recipes.summarize-example-app]
+description = "Read-only summary of the Desktop example-app-launcher project."
 prompt = """
 {execution_preface}
 
 Task:
 Summarize this project:
-{ultracode_launcher_dir}
+{example_app_dir}
 
 Focus on:
 - what the launcher does

@@ -241,7 +241,7 @@ class BridgeOrchestrationTests(unittest.TestCase):
             self.assertEqual(offset_store.load(), 6)
 
     def test_reply_truncates_at_configured_max(self) -> None:
-        long_text = "task ultracode-latest-errors"  # task path produces variable output
+        long_text = "task app-latest-errors"  # task path produces variable output
         # Use the simpler 'ping' but with a manually large reply via dispatcher stub
         update = _make_update(update_id=2, sender_id=111, chat_id=999, text="ping")
 

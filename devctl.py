@@ -3,8 +3,8 @@
 
 Examples:
     python devctl.py openclaw status
-    python devctl.py run summarize-ultracode --dry-run
-    python devctl.py mobile capture --source whatsapp --sender me --message "summarize ultracode"
+    python devctl.py run summarize-example-app --dry-run
+    python devctl.py mobile capture --source whatsapp --sender me --message "summarize example-app"
     python devctl.py mobile drain --limit 1
     python devctl.py logs errors --source all
 """

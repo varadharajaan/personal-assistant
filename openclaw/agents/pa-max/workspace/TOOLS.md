@@ -63,9 +63,9 @@ python .\devctl.py mobile owner status --json
 python .\devctl.py archive plan
 python .\devctl.py openclaw doctor-triage
 python .\devctl.py task list
-python .\devctl.py task run ultracode-latest-errors --send-telegram --confirm
+python .\devctl.py task run app-latest-errors --send-telegram --confirm
 python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm
-python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm
+python .\devctl.py task run start-app-hotkeys --send-telegram --confirm
 ```
 
 Role routing:
@@ -81,7 +81,7 @@ Safety:
 - Mobile external exposure is disabled by default. Do not expose the webhook to LAN or a tunnel until token protection and channel choice are explicit.
 - Do not set OpenClaw command owners until the approved external channel-native id is known.
 - Sending messages, email, purchases, credential changes, deletion, and broad system automation require explicit confirmation.
-- Laptop actions must use configured `devctl.py task` names. Do not invent ad hoc commands for hotkeys, screenshots, or UltraCode log checks.
+- Laptop actions must use configured `devctl.py task` names. Do not invent ad hoc commands for hotkeys, screenshots, or ExampleApp log checks.
 - Screenshot delivery tries OpenClaw native Telegram media send first, then the configured Telegram Bot API fallback if the gateway message-send path times out.
 - Telegram-originated laptop tasks should use `--send-telegram --confirm` for their task command, because the devctl delivery path has the configured OpenClaw-native retry and Bot API fallback.
 

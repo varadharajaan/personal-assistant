@@ -11,7 +11,7 @@ OpenClaw Telegram worked, but the gateway could become unreliable after Telegram
 - An orphan OpenClaw node process remained:
   `openclaw/dist/index.js node run --host 127.0.0.1 --port 18789`.
 
-This is not ClipSync and not UltraCode Launcher. The recovery layer must not stop or reconfigure ClipSync.
+This is not ClipSync and not ExampleApp Launcher. The recovery layer must not stop or reconfigure ClipSync.
 
 ## Watchdog
 
@@ -110,7 +110,7 @@ Latest verified recovery:
 - `mobile channel status --json --timeout-ms 30000` reported Telegram configured, running, connected, and token available after warm-up.
 - Scheduled task run at 2026-05-11 20:35 returned `Last Result: 0`.
 - A real OpenClaw model call returned exactly `PA_GATEWAY_OK` through `github-copilot/gpt-5.4`.
-- A real Telegram delivery test through `ultracode-latest-errors --send-telegram --confirm` completed with Telegram return code `0`.
+- A real Telegram delivery test through `app-latest-errors --send-telegram --confirm` completed with Telegram return code `0`.
 
 Residual risk: `mobile channel status` can still report
 `eventLoop.degraded=true` while Telegram is connected. The watchdog keeps the

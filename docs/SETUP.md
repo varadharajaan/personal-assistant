@@ -183,7 +183,7 @@ The sync policy is in `config/settings.toml` under `[desktop_sync]`. `--pa` / `-
 
 The log viewer on port `7000` includes:
 
-- ultracode logs
+- example-app logs
 - jar logs
 - personal-assistant logs
 - `~/.openclaw/logs`
@@ -202,7 +202,7 @@ Invoke-WebRequest -Uri "http://127.0.0.1:7000/api/files?refresh=1" -UseBasicPars
 python -m compileall .\assistant .\devctl.py
 python -m unittest discover -s tests -v
 python .\devctl.py recipes
-python .\devctl.py run summarize-ultracode --dry-run
+python .\devctl.py run summarize-example-app --dry-run
 python .\devctl.py notes list
 python .\devctl.py todos list
 python .\devctl.py files search --scope personal --query OpenClaw --limit 5
@@ -217,7 +217,7 @@ python .\devctl.py archive lifecycle-verify
 python .\devctl.py archive schedule-status
 python .\devctl.py watchdog status
 python .\devctl.py watchdog schedule-status
-.\scripts\summarize-ultracode.ps1 --dry-run
+.\scripts\summarize-example-app.ps1 --dry-run
 .\scripts\latest-openclaw-errors.ps1 --limit 20
 ```
 

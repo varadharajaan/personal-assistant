@@ -101,7 +101,7 @@ Custom code is allowed when it adds one of these local concerns:
 
 `assistant/devctl/log_inspector.py`
 
-- Reads configured personal/OpenClaw/UltraCode log sources.
+- Reads configured personal/OpenClaw/ExampleApp log sources.
 - Filters warning/error/failure lines using config-driven rules.
 
 `assistant/devctl/laptop_tasks.py`
@@ -273,7 +273,7 @@ config/settings.toml [desktop_sync] -> DeskSync v3 external folder spec -> perso
 Log viewer:
 
 ```text
-ultracode log-viewer server -> ultracode + jar + personal-assistant + safe OpenClaw log roots
+example-app log-viewer server -> example-app + jar + personal-assistant + safe OpenClaw log roots
 ```
 
 Local notes/todos:

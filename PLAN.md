@@ -7,7 +7,7 @@ Build a personal assistant that runs on this Windows laptop and can help with da
 - Chat with context about approved local files and notes.
 - Create and retrieve personal memory.
 - Manage todos, reminders, and simple routines.
-- Run approved laptop actions through PowerShell, Python, or AutoHotkey.
+- Run approved laptop actions through PowerShell, Python, or a desktop automation tool.
 - Optionally support voice input/output later.
 
 ## Recommended Direction
@@ -70,7 +70,7 @@ LLM options:
 Automation options:
 
 - PowerShell for files, apps, Windows settings, scheduled tasks.
-- AutoHotkey v2 for hotkeys and desktop automation.
+- desktop automation for hotkeys and shortcuts.
 - PyAutoGUI or pywinauto for UI automation only when no API/script route exists.
 
 Memory/search options:
@@ -136,7 +136,7 @@ personal-assistant/
   scripts/
     pa.ps1
     openclaw-control.ps1
-    summarize-ultracode.ps1
+    summarize-example-app.ps1
     latest-openclaw-errors.ps1
     start.ps1
     install.ps1
@@ -193,7 +193,7 @@ Build this only after setup, logging, mobile capture, and runner flows are stabl
 - Create a simple local UI page for the OpenClaw agent.
 - Keep it operational, not marketing-style:
   - chat input/output
-  - quick buttons for common recipes such as `summarize-ultracode`, `latest-openclaw-errors`, `handoff`, and `daily-brief`
+  - quick buttons for common recipes such as `summarize-example-app`, `latest-openclaw-errors`, `handoff`, and `daily-brief`
   - OpenClaw status panel
   - recent personal-assistant logs panel
   - pending mobile commands panel
@@ -213,7 +213,7 @@ Build this only after setup, logging, mobile capture, and runner flows are stabl
 - [x] Add principal-engineer engineering standard.
 - [x] Add cross-chat checkpoint.
 - [x] Add Python `devctl.py` control plane.
-- [x] Add runner scripts for OpenClaw control, ultracode summary, and OpenClaw error logs.
+- [x] Add runner scripts for OpenClaw control, example-app summary, and OpenClaw error logs.
 - [x] Add mobile command capture/list/drain flow with local JSONL audit trail.
 - [x] Add central `config/settings.toml`.
 - [x] Refactor runner paths, models, aliases, timeouts, log limits, mobile settings, and recipes to config.
@@ -238,10 +238,10 @@ Build this only after setup, logging, mobile capture, and runner flows are stabl
 - [x] Add optional local/S3 archive command scaffolding.
 - [x] Complete Telegram native channel setup through token file, S3 fallback, pairing approval, and command-owner configuration.
 - [x] Verify one real post-pairing Telegram command from the phone returns a bot response.
-- [x] Add config-driven laptop tasks for UltraCode log checks, primary-screen screenshots, Telegram screenshot delivery, and confirmation-gated UltraCode hotkey startup.
+- [x] Add config-driven laptop tasks for ExampleApp log checks, primary-screen screenshots, Telegram screenshot delivery, and confirmation-gated ExampleApp hotkey startup.
 - [x] Add config-driven OpenClaw-native Telegram timeout recovery: retry markers, one gateway-only restart, native retry, then Bot API fallback.
 - [x] Add config-driven OpenClaw watchdog with stale-lock handling, native start, direct hidden fallback, and silent Task Scheduler automation.
-- [x] Build independent Telegram bridge (long-poll `getUpdates`) as the primary inbound path. Disable OpenClaw native Telegram channel. Bridge supports `ping`, `help`, shortcut `kind=task` rules (`screenshot`, `start ultracode`, `ultracode errors`), generic `task <name>`, `ask <text>`, and free-form fallback to OpenClaw agent `main`. Audit JSONL persists inbound text, reply text, and dispatch/send/total timing for historic queries.
+- [x] Build independent Telegram bridge (long-poll `getUpdates`) as the primary inbound path. Disable OpenClaw native Telegram channel. Bridge supports `ping`, `help`, shortcut `kind=task` rules (`screenshot`, `start example-app`, `example-app errors`), generic `task <name>`, `ask <text>`, and free-form fallback to OpenClaw agent `main`. Audit JSONL persists inbound text, reply text, and dispatch/send/total timing for historic queries.
 - [ ] Final stable-state step: build simple local OpenClaw agent UI page after the user confirms the core flow looks good.
 
 ## Safety Model

@@ -25,16 +25,16 @@ List tasks:
 python .\devctl.py task list
 ```
 
-Check UltraCode Launcher warning/error logs:
+Check ExampleApp Launcher warning/error logs:
 
 ```powershell
-python .\devctl.py task run ultracode-latest-errors
+python .\devctl.py task run app-latest-errors
 ```
 
-Check UltraCode Launcher warning/error logs and send the result to Telegram:
+Check ExampleApp Launcher warning/error logs and send the result to Telegram:
 
 ```powershell
-python .\devctl.py task run ultracode-latest-errors --send-telegram --confirm
+python .\devctl.py task run app-latest-errors --send-telegram --confirm
 ```
 
 Capture the primary screen locally:
@@ -49,25 +49,25 @@ Capture and send the primary screen to the approved Telegram owner:
 python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm
 ```
 
-Start/restart UltraCode hotkeys using the same backend as Ctrl+Shift+W:
+Start/restart ExampleApp hotkeys using the same backend as Ctrl+Shift+W:
 
 ```powershell
-python .\devctl.py task run ultracode-start-hotkeys --confirm
+python .\devctl.py task run start-app-hotkeys --confirm
 ```
 
-Start/restart UltraCode hotkeys and send an independent Telegram confirmation:
+Start/restart ExampleApp hotkeys and send an independent Telegram confirmation:
 
 ```powershell
-python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm
+python .\devctl.py task run start-app-hotkeys --send-telegram --confirm
 ```
 
 On success, the Telegram confirmation is not the generic return code. The task
-reads the latest configured UltraCode launcher success line from
-`ultracode-launcher/logs/unified/start-all.log`, strips the configured log
+reads the latest configured ExampleApp launcher success line from
+`example-app-launcher/logs/unified/start-all.log`, strips the configured log
 prefixes, and sends a message like:
 
 ```text
-DONE All AHK scripts launched | delay=414ms total=2429ms
+DONE All desktop hotkey scripts launched | delay=414ms total=2429ms
 ```
 
 ## Telegram Phrases
@@ -75,9 +75,9 @@ DONE All AHK scripts launched | delay=414ms total=2429ms
 Ask the OpenClaw Telegram bot naturally, but include explicit confirmation for
 external send/system actions:
 
-- `check ultracode latest errors`
+- `check example-app latest errors`
 - `send my current screen screenshot to telegram confirm`
-- `start ultracode hotkeys confirm`
+- `start example-app hotkeys confirm`
 
 The OpenClaw workspace tells the agent to map those phrases to `devctl.py task`
 commands instead of inventing shell commands.
@@ -89,13 +89,13 @@ normal final channel reply fails after the local action already succeeded.
 
 ## Safety
 
-- `ultracode-latest-errors` is read-only.
+- `app-latest-errors` is read-only.
 - `screen-primary-screenshot` writes a local PNG under `data/screenshots`.
 - `screen-primary-screenshot --send-telegram` exports screen content and requires `--confirm`.
-- `ultracode-start-hotkeys` requires `--confirm` because `start-all-ahk.vbs` restarts AutoHotkey and may background helper services exactly like the desktop shortcut.
-- `ultracode-start-hotkeys --send-telegram --confirm` is the preferred Telegram-owner route because it sends a separate task-level confirmation using the latest `DONE All AHK scripts launched` launcher log line.
+- `start-app-hotkeys` requires `--confirm` because `start-app.vbs` restarts a desktop automation tool and may background helper services exactly like the desktop shortcut.
+- `start-app-hotkeys --send-telegram --confirm` is the preferred Telegram-owner route because it sends a separate task-level confirmation using the latest `DONE All desktop hotkey scripts launched` launcher log line.
 - Do not simulate keypresses unless the user explicitly asks for keypress simulation. Prefer the configured backend script.
-- ClipSync remains protected. The hotkey task exists because it is the existing UltraCode shortcut backend; do not modify ClipSync pairing, ports, state, or config.
+- ClipSync remains protected. The hotkey task exists because it is the existing ExampleApp shortcut backend; do not modify ClipSync pairing, ports, state, or config.
 
 ## Telegram Delivery
 

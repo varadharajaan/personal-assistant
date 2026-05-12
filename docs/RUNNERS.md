@@ -17,7 +17,7 @@ Convenience wrappers:
 
 ```powershell
 .\scripts\openclaw-control.ps1 status
-.\scripts\summarize-ultracode.ps1 --dry-run
+.\scripts\summarize-example-app.ps1 --dry-run
 .\scripts\latest-openclaw-errors.ps1
 .\scripts\model-routes.ps1
 .\scripts\openclaw-doctor-triage.ps1
@@ -100,8 +100,8 @@ Telegram phrases the bridge recognises directly (no OpenClaw call, ~2–6s):
 
 - `ping`, `help`, `?`, `/help`
 - `screenshot`, `screen`, `take screenshot`, `screen shot`
-- `start ultracode`, `restart ultracode`, `ultracode`, `start ahk`, `restart ahk`, `ahk`
-- `ultracode errors`, `ultracode latest errors`, `ultracode logs`
+- `start example-app`, `restart example-app`, `example-app`, `start hotkey scripts`, `restart hotkey scripts`, `hotkey scripts`
+- `example-app errors`, `example-app latest errors`, `example-app logs`
 
 Generic forms:
 
@@ -155,7 +155,7 @@ If that error returns, check these first:
 
 ```powershell
 python .\devctl.py smoke
-python .\devctl.py run summarize-ultracode --dry-run
+python .\devctl.py run summarize-example-app --dry-run
 ```
 
 ## Prompt Recipes
@@ -171,13 +171,13 @@ List recipes:
 Print the exact prompt without sending it:
 
 ```powershell
-.\scripts\pa.ps1 run summarize-ultracode --dry-run
+.\scripts\pa.ps1 run summarize-example-app --dry-run
 ```
 
 Send a recipe to OpenClaw:
 
 ```powershell
-.\scripts\pa.ps1 run summarize-ultracode
+.\scripts\pa.ps1 run summarize-example-app
 .\scripts\pa.ps1 run latest-openclaw-errors
 .\scripts\pa.ps1 run handoff
 ```
@@ -232,21 +232,21 @@ Approved laptop actions are exposed through `devctl.py task` and configured in
 
 ```powershell
 python .\devctl.py task list
-python .\devctl.py task run ultracode-latest-errors
-python .\devctl.py task run ultracode-latest-errors --send-telegram --confirm
+python .\devctl.py task run app-latest-errors
+python .\devctl.py task run app-latest-errors --send-telegram --confirm
 python .\devctl.py task run screen-primary-screenshot
 python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm
-python .\devctl.py task run ultracode-start-hotkeys --confirm
-python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm
+python .\devctl.py task run start-app-hotkeys --confirm
+python .\devctl.py task run start-app-hotkeys --send-telegram --confirm
 ```
 
 Current task map:
 
-- `ultracode-latest-errors`: read-only UltraCode Launcher warning/error log scan.
+- `app-latest-errors`: read-only ExampleApp Launcher warning/error log scan.
 - `screen-primary-screenshot`: primary-screen PNG capture under `data/screenshots`.
 - `screen-primary-screenshot --send-telegram --confirm`: sends the PNG to the approved Telegram owner.
-- `ultracode-start-hotkeys --confirm`: runs the same `start-all-ahk.vbs` backend used by the Ctrl+Shift+W shortcut.
-- `ultracode-start-hotkeys --send-telegram --confirm`: preferred Telegram-owner route because the task runner sends a separate delivery confirmation. On success, the confirmation comes from the latest configured UltraCode launcher log line, for example `DONE All AHK scripts launched | delay=414ms total=2429ms`.
+- `start-app-hotkeys --confirm`: runs the same `start-app.vbs` backend used by the Ctrl+Shift+W shortcut.
+- `start-app-hotkeys --send-telegram --confirm`: preferred Telegram-owner route because the task runner sends a separate delivery confirmation. On success, the confirmation comes from the latest configured ExampleApp launcher log line, for example `DONE All desktop hotkey scripts launched | delay=414ms total=2429ms`.
 
 Telegram delivery uses OpenClaw native `message send` first. If the gateway
 message-send path returns a configured timeout marker, the task runner can
@@ -263,7 +263,7 @@ For Telegram-originated laptop tasks, workspace routing therefore includes
 A future Telegram, WhatsApp, or webhook bridge should call:
 
 ```powershell
-.\scripts\pa.ps1 mobile capture --source whatsapp --sender "<sender>" --channel personal --message "summarize ultracode launcher"
+.\scripts\pa.ps1 mobile capture --source whatsapp --sender "<sender>" --channel personal --message "summarize example-app launcher"
 ```
 
 This stores the full command locally in:
@@ -328,7 +328,7 @@ Example JSON body:
 
 ```json
 {
-  "message": "summarize ultracode launcher",
+  "message": "summarize example-app launcher",
   "sender": "phone",
   "source": "webhook",
   "channel": "local-webhook"
@@ -431,11 +431,11 @@ OpenClaw logs and session-related log files:
 .\scripts\pa.ps1 logs summary --source all
 ```
 
-UltraCode Launcher logs:
+ExampleApp Launcher logs:
 
 ```powershell
-.\scripts\pa.ps1 logs errors --source ultracode
-.\scripts\pa.ps1 logs summary --source ultracode
+.\scripts\pa.ps1 logs errors --source example-app
+.\scripts\pa.ps1 logs summary --source example-app
 ```
 
 ## Desktop Sync
@@ -476,7 +476,7 @@ The sync policy excludes runtime/private output: `logs`, `data`, `__pycache__`, 
 
 ## Log Viewer
 
-The existing ultracode log viewer on port `7000` now includes these roots by default:
+The existing example-app log viewer on port `7000` now includes these roots by default:
 
 ```text
 personal-assistant -> projects/personal-assistant/logs

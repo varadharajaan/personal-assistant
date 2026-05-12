@@ -150,14 +150,14 @@ class DiagnosticTests(unittest.TestCase):
     def test_laptop_tasks_are_config_driven(self) -> None:
         names = task_names()
 
-        self.assertIn("ultracode-start-hotkeys", names)
-        self.assertIn("ultracode-latest-errors", names)
+        self.assertIn("start-app-hotkeys", names)
+        self.assertIn("app-latest-errors", names)
         self.assertIn("screen-primary-screenshot", names)
-        self.assertTrue(task_definition("ultracode-start-hotkeys")["requires_confirm"])
+        self.assertTrue(task_definition("start-app-hotkeys")["requires_confirm"])
 
     def test_laptop_task_dry_run_does_not_require_confirm(self) -> None:
         result = run_laptop_task(
-            "ultracode-start-hotkeys",
+            "start-app-hotkeys",
             dry_run=True,
             confirm=False,
             send_telegram=False,
@@ -174,7 +174,7 @@ class DiagnosticTests(unittest.TestCase):
                 "\n".join(
                     [
                         "[2026-05-11 15:28:45] [VBS] [start-all] [INFO] older line",
-                        "[2026-05-11 15:35:55] [VBS] [start-all] [INFO] DONE All AHK scripts launched | delay=414ms total=2429ms",
+                        "[2026-05-11 15:35:55] [VBS] [start-all] [INFO] DONE All desktop hotkey scripts launched | delay=414ms total=2429ms",
                     ]
                 ),
                 encoding="utf-8",
@@ -182,10 +182,10 @@ class DiagnosticTests(unittest.TestCase):
 
             message = laptop_task_module._command_result_message(
                 {
-                    "name": "ultracode-start-hotkeys",
+                    "name": "start-app-hotkeys",
                     "success_message_source": "latest-log-line",
                     "success_log_path": str(log_path),
-                    "success_log_contains": "DONE All AHK scripts launched",
+                    "success_log_contains": "DONE All desktop hotkey scripts launched",
                     "success_log_strip_regexes": [r"^(?:\[[^\]]+\]\s*)+"],
                     "success_log_require_mtime_after_start": False,
                     "success_message_template": "{line}",
@@ -195,7 +195,7 @@ class DiagnosticTests(unittest.TestCase):
                 log=lambda *args, **kwargs: None,
             )
 
-        self.assertEqual(message, "DONE All AHK scripts launched | delay=414ms total=2429ms")
+        self.assertEqual(message, "DONE All desktop hotkey scripts launched | delay=414ms total=2429ms")
 
     def test_telegram_token_uses_local_openclaw_token_file(self) -> None:
         self.assertEqual(get_str("mobile_channel.secret_storage"), "openclaw-token-file")

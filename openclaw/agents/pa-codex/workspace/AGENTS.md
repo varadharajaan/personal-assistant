@@ -133,15 +133,15 @@ python .\devctl.py task list
 
 Natural-language routing:
 
-- "check UltraCode logs/errors" from Telegram -> `python .\devctl.py task run ultracode-latest-errors --send-telegram --confirm`
+- "check ExampleApp logs/errors" from Telegram -> `python .\devctl.py task run app-latest-errors --send-telegram --confirm`
 - "send my screen/current screen/screenshot to Telegram" -> `python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm`
-- "start hotkeys", "restart UltraCode hotkeys", or "Ctrl+Shift+W" from Telegram -> `python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm`
+- "start hotkeys", "restart ExampleApp hotkeys", or "Ctrl+Shift+W" from Telegram -> `python .\devctl.py task run start-app-hotkeys --send-telegram --confirm`
 
 Safety:
 
 - Prefer these named tasks over invented shell commands.
-- Do not simulate desktop keypresses unless the user explicitly asks for keypress simulation. The hotkey task uses the same UltraCode `start-all-ahk.vbs` backend as the desktop shortcut.
-- `ultracode-start-hotkeys` is confirmation-gated because that launcher restarts AutoHotkey and may background helper services exactly like the desktop shortcut.
+- Do not simulate desktop keypresses unless the user explicitly asks for keypress simulation. The hotkey task uses the same ExampleApp `start-app.vbs` backend as the desktop shortcut.
+- `start-app-hotkeys` is confirmation-gated because that launcher restarts a desktop automation tool and may background helper services exactly like the desktop shortcut.
 - For Telegram-originated laptop tasks, include `--send-telegram --confirm` so the task runner sends a hardened confirmation even if OpenClaw's final channel reply fails.
 - Sending a screenshot to Telegram is confirmation-gated because it exports screen content to an external channel.
 - If OpenClaw-native Telegram media delivery times out but the configured Telegram Bot API fallback succeeds, treat the task as successful and mention that delivery completed.

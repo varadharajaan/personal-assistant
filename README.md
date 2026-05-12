@@ -43,12 +43,12 @@ You:  ss
 Bot:  📷 [screenshot of your primary monitor]
 
 You:  uc errors
-Bot:  task: ultracode-latest-errors / status: ok
+Bot:  task: app-latest-errors / status: ok
       <recent warn/error log lines>
 
 You:  start uc
-Bot:  task: ultracode-start-hotkeys / status: ok
-      DONE All AHK scripts launched | delay=425ms total=2804ms
+Bot:  task: start-app-hotkeys / status: ok
+      DONE All desktop hotkey scripts launched | delay=425ms total=2804ms
 
 You:  what should I work on today?
 Bot:  Here's what's on your plate:
@@ -74,7 +74,7 @@ Bot:  Here's what's on your plate:
               ┌────────────────┐   ┌──────────────────┐   ┌──────────────────┐
               │ Shortcut Rules │   │ Laptop Task      │   │ OpenClaw Agent   │
               │ (kind=canned/  │   │ Dispatcher       │   │ (gpt-5.4 / mini, │
-              │  task)         │   │ (PS1/Python/AHK) │   │  thinking=off)   │
+              │  task)         │   │ (PS1/Python/desktop hotkey scripts) │   │  thinking=off)   │
               └────────┬───────┘   └────────┬─────────┘   └────────┬─────────┘
                        │                    │                      │
                        └────────────────────┴──────────────────────┘
@@ -92,7 +92,7 @@ Three classes of inbound message, three latency tiers:
 | Tier        | Examples                                | Path                                     | Typical latency |
 | ----------- | --------------------------------------- | ---------------------------------------- | --------------- |
 | ⚡ Canned   | `ping`, `help`                          | Bridge replies directly                  | <1s             |
-| 🔧 Shortcut | `ss`, `uc`, `uc errors`, `start uc`     | Bridge → laptop task (PS1/AHK)           | 2–10s           |
+| 🔧 Shortcut | `ss`, `uc`, `uc errors`, `start uc`     | Bridge → laptop task (PS1)           | 2–10s           |
 | 🧠 LLM ask  | `ask <q>`, anything not matching above  | Bridge → OpenClaw `main` agent → Copilot | 30–80s          |
 
 Every tier writes to `data/telegram-bridge/{inbound,outbound}.jsonl` with hashed sender ids, rule id, dispatch/send/total milliseconds, and (configurable) the full inbound text + reply preview. **Debugging a missed message is one `Get-Content -Tail` away.**
@@ -125,7 +125,7 @@ Every tier writes to `data/telegram-bridge/{inbound,outbound}.jsonl` with hashed
 
 ### 🛠️ Approved laptop tasks
 - Screenshot + Telegram delivery
-- UltraCode start / log tail
+- ExampleApp start / log tail
 - Daily brief, todos, notes
 - All gated by `requires_confirm`
 
@@ -188,7 +188,7 @@ This is not a weekend hack. The repo enforces a **principal-engineer standard**:
 | Messaging        | Telegram Bot API (long-poll, no webhook)                   |
 | Storage          | Local JSON/JSONL + markdown notes, optional S3 archive    |
 | Scheduler        | Windows Task Scheduler (silent VBS launchers)              |
-| Automation       | PowerShell, AutoHotkey v2, Python subprocess               |
+| Automation       | PowerShell, desktop automation tools, Python subprocess               |
 | Logging          | Custom shared helpers (`pa_logging.py`, `_log_helper.ps1`) |
 
 ---

@@ -11,7 +11,7 @@ Maintained as a principal-engineer quality repo: configuration-driven, logged, d
 | Telegram inbound (receive) | Independent Telegram bridge (long-poll `getUpdates`) | working |
 | Telegram outbound (reply) | Telegram Bot API direct | working |
 | Owner-only command filtering | OpenClaw `commands.ownerAllowFrom` resolved at startup | working |
-| Shortcut phrases (`screenshot`, `ultracode`, `ultracode errors`, `ping`, `help`) | Bridge `kind=task`/`canned`/`help` rules | working, ~2–6s |
+| Shortcut phrases (`screenshot`, `example-app`, `example-app errors`, `ping`, `help`) | Bridge `kind=task`/`canned`/`help` rules | working, ~2–6s |
 | `task <name>` explicit dispatch | Bridge `kind=task-by-name` | working, ~2–8s |
 | Natural language `ask <text>` / fallback | Bridge → OpenClaw agent `main` (`thinking=medium`) | working, ~60–90s |
 | OpenClaw native Telegram polling | Disabled (`channels.telegram.enabled = false`) | intentionally off |
@@ -35,8 +35,8 @@ The bot username is the one paired during onboarding. Send messages directly fro
 | `ping` | Reply `pong`. Health check. |
 | `help`, `?`, `/help` | Reply with the full command list built from the live rule set. |
 | `screenshot`, `screen`, `take screenshot`, `screen shot` | Capture primary screen; send PNG to Telegram. |
-| `start ultracode`, `restart ultracode`, `ultracode`, `start ahk`, `restart ahk`, `ahk` | Run UltraCode launcher; reply with the `DONE All AHK scripts launched …` log line. |
-| `ultracode errors`, `ultracode latest errors`, `ultracode logs` | Reply with the latest UltraCode warning/error log lines. |
+| `start example-app`, `restart example-app`, `example-app`, `start hotkey scripts`, `restart hotkey scripts`, `hotkey scripts` | Run ExampleApp launcher; reply with the `DONE All desktop hotkey scripts launched …` log line. |
+| `example-app errors`, `example-app latest errors`, `example-app logs` | Reply with the latest ExampleApp warning/error log lines. |
 
 ### Generic forms
 
@@ -166,9 +166,9 @@ python .\devctl.py brief daily --show
 
 # Laptop tasks
 python .\devctl.py task list
-python .\devctl.py task run ultracode-latest-errors
+python .\devctl.py task run app-latest-errors
 python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm
-python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm
+python .\devctl.py task run start-app-hotkeys --send-telegram --confirm
 
 # Archive
 python .\devctl.py archive plan
@@ -182,7 +182,7 @@ python .\devctl.py mobile webhook info
 
 # Wrappers
 .\scripts\pa.ps1 smoke
-.\scripts\summarize-ultracode.ps1 --dry-run
+.\scripts\summarize-example-app.ps1 --dry-run
 .\scripts\latest-openclaw-errors.ps1 --limit 20
 .\scripts\model-routes.ps1
 .\scripts\openclaw-doctor-triage.ps1

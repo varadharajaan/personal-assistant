@@ -44,17 +44,17 @@ These phrases are matched **exactly** (case-insensitive). They bypass OpenClaw e
 | `ping` | canned reply | no | `pong` |
 | `help`, `?`, `/help` | help text built from this rule list | no | command summary |
 | `screenshot`, `screen`, `take screenshot`, `screen shot` | `task screen-primary-screenshot` with `--send-telegram --confirm` | implicit | screenshot delivered to Telegram + status line |
-| `start ultracode`, `restart ultracode`, `ultracode`, `start ahk`, `restart ahk`, `ahk` | `task ultracode-start-hotkeys` with `--send-telegram --confirm` | implicit | UltraCode launcher result, e.g. `DONE All AHK scripts launched | delay=...ms` |
-| `ultracode errors`, `ultracode latest errors`, `ultracode logs` | `task ultracode-latest-errors` with `--send-telegram` | no | recent warning/error log lines |
+| `start example-app`, `restart example-app`, `example-app`, `start hotkey scripts`, `restart hotkey scripts`, `hotkey scripts` | `task start-app-hotkeys` with `--send-telegram --confirm` | implicit | ExampleApp launcher result, e.g. `DONE All desktop hotkey scripts launched | delay=...ms` |
+| `example-app errors`, `example-app latest errors`, `example-app logs` | `task app-latest-errors` with `--send-telegram` | no | recent warning/error log lines |
 
 The shortcut rules are config-driven under `[[telegram_bridge.rules]]` with `kind = "task"`, `task_name`, `task_confirm`, `task_send_telegram`. Add new shortcuts there; do not hardcode them in Python.
 
 ### Generic Command Forms
 
 - `task <name>` — run any approved laptop task by name. Append `confirm` if the task requires it. Examples:
-  - `task ultracode-latest-errors`
+  - `task app-latest-errors`
   - `task screen-primary-screenshot confirm`
-  - `task ultracode-start-hotkeys confirm`
+  - `task start-app-hotkeys confirm`
 - `ask <text>` — explicitly route text to OpenClaw agent `main` (`thinking=medium`). Slow (~70–90s) but supports natural language and tool use through the OpenClaw agent.
 - Any other text falls through to the `fallback-ask` rule, which routes to OpenClaw the same way as `ask`.
 
@@ -90,7 +90,7 @@ The bridge picks up the change after its next 60 s cache refresh.
 
 ### When To Use Which Path
 
-- **Use shortcuts** (`screenshot`, `ultracode`, …) for daily commands. Fast, deterministic, no model cost.
+- **Use shortcuts** (`screenshot`, `example-app`, …) for daily commands. Fast, deterministic, no model cost.
 - **Use `task <name>`** for any approved laptop task whose name you know.
 - **Use `ask <text>`** when you actually need OpenClaw's reasoning or tool routing.
 
@@ -140,7 +140,7 @@ Example:
 
 ```json
 {
-  "message": "summarize ultracode launcher",
+  "message": "summarize example-app launcher",
   "sender": "phone",
   "source": "webhook",
   "channel": "local-webhook"

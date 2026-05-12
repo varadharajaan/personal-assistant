@@ -1,6 +1,6 @@
 # Logging Contract
 
-Personal Assistant logging follows the same shape as `ultracode-launcher` and `jar`.
+Personal Assistant logging follows the same shape as `example-app-launcher` and `jar`.
 
 ## Log Layout
 
@@ -99,7 +99,7 @@ Local archive support is implemented through `python .\devctl.py archive create`
 
 ## Log Viewer Integration
 
-The existing ultracode log viewer on `http://127.0.0.1:7000` includes personal-assistant and safe OpenClaw log roots by default.
+The existing example-app log viewer on `http://127.0.0.1:7000` includes personal-assistant and safe OpenClaw log roots by default.
 
 Included roots:
 

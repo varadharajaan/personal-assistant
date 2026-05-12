@@ -51,7 +51,7 @@ Primary stack:
 - Agent smoke confirmed the runtime route `github-copilot / gpt-5.4`.
 - Per-call provider/model override is still config-gated because OpenClaw currently rejects overrides for this caller.
 - Custom layer: local skills for notes, todos, project context, file search, reminders, and approved laptop automation.
-- Logging layer: all custom tools write to `logs/unified/<flow>.log` and `logs/unified/_session.log`, matching `ultracode-launcher` and `jar` conventions.
+- Logging layer: all custom tools write to `logs/unified/<flow>.log` and `logs/unified/_session.log`, matching `example-app-launcher` and `jar` conventions.
 - Engineering standard: principal-engineer repo quality, SOLID design, and Liskov-safe provider/tool adapters. See `docs/ENGINEERING-STANDARD.md`.
 - Config standard: all tunable values must live in `config/settings.toml`; Python/PowerShell should not hardcode paths, models, aliases, timeouts, recipes, or log limits.
 - Documentation standard: every meaningful change must update relevant docs and checkpoint when current state changes. See `docs/DOCUMENTATION-STANDARD.md`.

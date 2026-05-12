@@ -1,6 +1,6 @@
 """Shared logger for personal-assistant Python tools.
 
-Mirrors the logging shape used by ultracode-launcher and jar:
+Mirrors the logging shape used by example-app-launcher and jar:
 
 - logs/unified/<flow>.log is the primary per-flow stream.
 - logs/unified/_session.log mirrors all flow lines.

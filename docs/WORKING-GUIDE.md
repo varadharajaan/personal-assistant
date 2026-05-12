@@ -57,8 +57,8 @@ From your phone's Telegram client, send any of:
 | `ping` | `pong` |
 | `help` / `?` / `/help` | full command list |
 | `screenshot` / `screen` / `take screenshot` / `screen shot` | primary-screen PNG delivered to Telegram |
-| `start ultracode` / `restart ultracode` / `ultracode` / `start ahk` / `restart ahk` / `ahk` | runs UltraCode launcher; replies with `DONE All AHK scripts launched \| delay=...ms` |
-| `ultracode errors` / `ultracode latest errors` / `ultracode logs` | latest UltraCode warning/error log lines |
+| `start example-app` / `restart example-app` / `example-app` / `start hotkey scripts` / `restart hotkey scripts` / `hotkey scripts` | runs ExampleApp launcher; replies with `DONE All desktop hotkey scripts launched \| delay=...ms` |
+| `example-app errors` / `example-app latest errors` / `example-app logs` | latest ExampleApp warning/error log lines |
 | `task <name>` (optionally followed by `confirm`) | runs the named approved laptop task |
 | `ask <text>` | sends `<text>` to OpenClaw `main` |
 | anything else | treated as `ask` |
@@ -150,14 +150,14 @@ python .\devctl.py recipes
 Preview a recipe:
 
 ```powershell
-python .\devctl.py run summarize-ultracode --dry-run
+python .\devctl.py run summarize-example-app --dry-run
 ```
 
 Inspect errors:
 
 ```powershell
 python .\devctl.py logs errors --source all --limit 80
-python .\devctl.py logs errors --source ultracode --limit 80
+python .\devctl.py logs errors --source example-app --limit 80
 .\scripts\latest-openclaw-errors.ps1 --limit 20
 ```
 
@@ -203,23 +203,23 @@ Use approved laptop tasks:
 
 ```powershell
 python .\devctl.py task list
-python .\devctl.py task run ultracode-latest-errors
-python .\devctl.py task run ultracode-latest-errors --send-telegram --confirm
+python .\devctl.py task run app-latest-errors
+python .\devctl.py task run app-latest-errors --send-telegram --confirm
 python .\devctl.py task run screen-primary-screenshot
 python .\devctl.py task run screen-primary-screenshot --send-telegram --confirm
-python .\devctl.py task run ultracode-start-hotkeys --confirm
-python .\devctl.py task run ultracode-start-hotkeys --send-telegram --confirm
+python .\devctl.py task run start-app-hotkeys --confirm
+python .\devctl.py task run start-app-hotkeys --send-telegram --confirm
 ```
 
 Telegram phrases for the bot:
 
 ```text
-check ultracode latest errors
+check example-app latest errors
 send my current screen screenshot to telegram confirm
-start ultracode hotkeys confirm
+start example-app hotkeys confirm
 ```
 
-The hotkey task uses UltraCode's configured backend script instead of simulating
+The hotkey task uses ExampleApp's configured backend script instead of simulating
 keyboard input. It is confirmation-gated because the existing Ctrl+Shift+W
 backend can also background helper services.
 
@@ -244,7 +244,7 @@ Invoke-WebRequest -Uri "http://127.0.0.1:7000/api/files?refresh=1" -UseBasicPars
 Capture a command:
 
 ```powershell
-python .\devctl.py mobile capture --source whatsapp --sender "<sender>" --channel personal --message "summarize ultracode launcher"
+python .\devctl.py mobile capture --source whatsapp --sender "<sender>" --channel personal --message "summarize example-app launcher"
 ```
 
 List pending commands:

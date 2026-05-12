@@ -1,7 +1,7 @@
 # Purpose : Shared PowerShell logger for personal-assistant.
 # Schema  : logs/unified/<flow>.log + logs/unified/_session.log
 # Format  : [ts] [PS1] [flow] [LEVEL] message
-# Mirrors : ultracode-launcher/shared/ps1/_log_helper.ps1 and jar/helper/logging-helper.ps1.
+# Mirrors : example-app-launcher/shared/ps1/_log_helper.ps1 and jar/helper/logging-helper.ps1.
 
 function Resolve-PersonalAssistantRoot {
     function script:_IsPersonalAssistantRoot([string]$Path) {

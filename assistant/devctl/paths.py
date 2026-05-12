@@ -13,7 +13,7 @@ OPENCLAW_PROJECT_DIR = get_path("paths.openclaw_project_dir")
 OPENCLAW_WORKSPACE_DIR = get_path("paths.openclaw_workspace_dir")
 USER_OPENCLAW_DIR = get_path("paths.user_openclaw_dir")
 
-ULTRACODE_LAUNCHER_DIR = get_path("paths.ultracode_launcher_dir")
+EXAMPLE_APP_DIR = get_path("paths.example_app_dir")
 JAR_DIR = get_path("paths.jar_dir")
 
 DATA_DIR = get_path("paths.data_dir")

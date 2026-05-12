@@ -63,7 +63,7 @@ The Desktop sync onboarding for this repo is controlled by:
 [desktop_sync]
 ```
 
-`ultracode-launcher\desktop-sync\ps1\sync-to-personal-desktop-v3.ps1` reads that section and adds this repo as an external sync folder. Change sync aliases, formats, relative path, or ignore patterns in `config/settings.toml`, not inside the sync engine.
+`example-app-launcher\desktop-sync\ps1\sync-to-personal-desktop-v3.ps1` reads that section and adds this repo as an external sync folder. Change sync aliases, formats, relative path, or ignore patterns in `config/settings.toml`, not inside the sync engine.
 
 Current policy:
 
@@ -235,25 +235,25 @@ Approved laptop actions live under:
 
 Current tasks:
 
-- `ultracode-latest-errors`: reads UltraCode Launcher logs through generic configured log source roots.
+- `app-latest-errors`: reads ExampleApp Launcher logs through generic configured log source roots.
 - `screen-primary-screenshot`: captures the primary display into `paths.screenshots_dir`.
-- `ultracode-start-hotkeys`: runs the configured UltraCode `start-all-ahk.vbs` command and requires confirmation.
+- `start-app-hotkeys`: runs the configured ExampleApp `start-app.vbs` command and requires confirmation.
 
 Do not hardcode new task paths, commands, timeouts, output limits, screenshot directories, or Telegram delivery options in Python. Add them to TOML and keep `assistant/devctl/laptop_tasks.py` generic.
 
 Command tasks can also build success messages from a configured latest log
-line. `ultracode-start-hotkeys` uses:
+line. `start-app-hotkeys` uses:
 
 ```toml
 success_message_source = "latest-log-line"
-success_log_path = "{ultracode_launcher_dir}/logs/unified/start-all.log"
-success_log_contains = "DONE All AHK scripts launched"
+success_log_path = "{example_app_dir}/logs/unified/start-all.log"
+success_log_contains = "DONE All desktop hotkey scripts launched"
 success_log_strip_regexes = ["^(?:\\[[^\\]]+\\]\\s*)+"]
 success_message_template = "{line}"
 ```
 
 This makes Telegram confirmations show the launcher outcome, such as
-`DONE All AHK scripts launched | delay=414ms total=2429ms`, instead of only a
+`DONE All desktop hotkey scripts launched | delay=414ms total=2429ms`, instead of only a
 process return code.
 
 Telegram task delivery is ordered by:
@@ -286,7 +286,7 @@ Log source roots are generic:
 [logs.source_roots]
 personal = ["{logs_dir}"]
 openclaw = ["{user_openclaw_dir}/logs", "{user_openclaw_dir}/agents", "{openclaw_temp_logs_dir}"]
-ultracode = ["{ultracode_launcher_dir}/logs"]
+example-app = ["{example_app_dir}/logs"]
 ```
 
 Add future log sources here instead of editing `log_inspector.py`.
@@ -423,7 +423,7 @@ aws_profile = "account01"
 s3_requires_confirm = true
 ```
 
-The bucket is not shared with ultracode. It was created with public access blocked, bucket-owner-enforced object ownership, versioning enabled, S3-managed AES256 default encryption, Object Lock governance retention for 60 days, and a lifecycle rule that expires current and noncurrent archive objects after 60 days. Incomplete multipart uploads are cleaned after 7 days.
+The bucket is not shared with example-app. It was created with public access blocked, bucket-owner-enforced object ownership, versioning enabled, S3-managed AES256 default encryption, Object Lock governance retention for 60 days, and a lifecycle rule that expires current and noncurrent archive objects after 60 days. Incomplete multipart uploads are cleaned after 7 days.
 
 Archives are created as `.7z` using the config-named `ppmd-text-ultra-no-times` profile. The current profile uses solid 7-Zip PPMd compression and strips archive timestamp metadata because the assistant memory archive is mostly text. 7-Zip is resolved from config, including the explicit Windows install path `C:/Program Files/7-Zip/7z.exe` because it may not be on `PATH`.
 
