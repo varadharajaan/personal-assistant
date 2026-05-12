@@ -1,0 +1,35 @@
+{
+  "files.associations": {
+    "*.log": "log"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "log.error",
+        "settings": {
+          "foreground": "#F75A68",
+          "fontStyle": "bold"
+        }
+      },
+      {
+        "scope": "log.warning",
+        "settings": {
+          "foreground": "#F5A524",
+          "fontStyle": "bold"
+        }
+      },
+      {
+        "scope": "log.info",
+        "settings": {
+          "foreground": "#4DA3FF"
+        }
+      },
+      {
+        "scope": "log.debug",
+        "settings": {
+          "foreground": "#8B8B95"
+        }
+      }
+    ]
+  }
+}
